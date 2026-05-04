@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Despre Noi | WOW NanoCeramic</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#080808;--black2:#111111;--black3:#1a1a1a;
+  --gold:#C9A020;--gold2:#E0B830;--white:#fff;--gray:#888;
+  --grad:linear-gradient(135deg,#F0C040 0%,#B8860B 40%,#F5D060 60%,#8B6508 100%)
+}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:'Montserrat',sans-serif;overflow-x:hidden}
+.topbar{background:var(--grad);color:var(--black);text-align:center;padding:10px 20px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+header{position:sticky;top:0;z-index:99;background:rgba(8,8,8,0.97);border-bottom:1px solid rgba(201,160,32,0.15);padding:0 60px;display:flex;align-items:center;justify-content:space-between;height:72px;backdrop-filter:blur(12px)}
+.logo{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;letter-spacing:3px;text-transform:uppercase;text-decoration:none}
+nav{display:flex;gap:28px}
+nav a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:500;transition:color .3s}
+nav a:hover{color:var(--gold)}
+.back-btn{background:transparent;border:1px solid rgba(201,160,32,0.4);color:var(--gold);padding:9px 20px;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-family:'Montserrat',sans-serif;font-weight:600;transition:all .3s;text-decoration:none;display:inline-block}
+.back-btn:hover{background:var(--grad);color:var(--black)}
+
+/* HERO */
+.page-hero{padding:100px 60px 80px;border-bottom:1px solid rgba(201,160,32,0.1);position:relative;overflow:hidden}
+.page-hero::before{content:'WOW';position:absolute;right:-40px;top:50%;transform:translateY(-50%);font-family:'Cormorant Garamond',serif;font-size:280px;font-weight:700;color:rgba(201,160,32,0.04);line-height:1;pointer-events:none;letter-spacing:-10px}
+.page-badge{display:inline-block;background:rgba(201,160,32,0.12);border:1px solid rgba(201,160,32,0.35);color:var(--gold);font-size:10px;letter-spacing:4px;text-transform:uppercase;padding:7px 18px;margin-bottom:24px;font-weight:600}
+.page-hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,5vw,72px);font-weight:700;color:var(--white);margin-bottom:20px;line-height:1.1}
+.page-hero h1 span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.page-hero .lead{color:rgba(255,255,255,0.6);font-size:15px;line-height:1.9;max-width:600px;font-weight:300}
+
+/* CONTENT */
+.content{max-width:900px;margin:0 auto;padding:72px 60px 80px}
+.section-block{margin-bottom:56px}
+.section-block h2{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--white);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(201,160,32,0.15)}
+.section-block h2 span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.section-block p{color:rgba(255,255,255,0.7);font-size:14px;line-height:1.95;margin-bottom:16px;font-weight:300}
+.section-block a{color:var(--gold);text-decoration:none}
+.section-block a:hover{text-decoration:underline}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(201,160,32,0.1);border:1px solid rgba(201,160,32,0.1);margin:32px 0}
+.stat-box{background:var(--black);padding:28px 20px;text-align:center}
+.stat-num{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:700;display:block;margin-bottom:6px}
+.stat-label{color:rgba(255,255,255,0.45);font-size:10px;letter-spacing:2px;text-transform:uppercase}
+
+/* VALUES */
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0}
+.value-card{background:rgba(255,255,255,0.02);border:1px solid rgba(201,160,32,0.1);padding:28px 24px;transition:border-color .3s}
+.value-card:hover{border-color:rgba(201,160,32,0.3)}
+.value-icon{font-size:28px;margin-bottom:14px;display:block}
+.value-card h3{color:var(--white);font-size:13px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;font-weight:600}
+.value-card p{color:rgba(255,255,255,0.55);font-size:13px;line-height:1.7;margin:0}
+
+/* STORY TIMELINE */
+.story-line{display:flex;flex-direction:column;gap:0;margin:24px 0;padding-left:20px;border-left:1px solid rgba(201,160,32,0.2)}
+.story-item{padding:0 0 32px 28px;position:relative}
+.story-item:last-child{padding-bottom:0}
+.story-dot{position:absolute;left:-27px;top:4px;width:12px;height:12px;background:var(--grad);border-radius:50%}
+.story-year{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:700;margin-bottom:6px;display:block}
+.story-item h3{color:var(--white);font-size:14px;font-weight:600;margin-bottom:6px}
+.story-item p{color:rgba(255,255,255,0.55);font-size:13px;line-height:1.7;margin:0}
+
+/* CTA */
+.cta-block{background:rgba(201,160,32,0.06);border:1px solid rgba(201,160,32,0.2);padding:40px;text-align:center;margin-top:48px}
+.cta-block h3{font-family:'Cormorant Garamond',serif;font-size:28px;color:var(--white);margin-bottom:12px}
+.cta-block p{color:rgba(255,255,255,0.55);font-size:13px;margin-bottom:24px}
+.btn-gold{background:var(--grad);color:var(--black);padding:14px 36px;font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:700;font-family:'Montserrat',sans-serif;border:none;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-block}
+.btn-gold:hover{filter:brightness(1.1);transform:translateY(-1px)}
+
+footer{background:var(--black2);border-top:1px solid rgba(201,160,32,0.1);padding:60px 60px 32px}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.footer-logo{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;letter-spacing:3px;text-transform:uppercase;text-decoration:none;display:block;margin-bottom:12px}
+.footer-desc{color:rgba(255,255,255,0.4);font-size:12px;line-height:1.8;margin-bottom:20px}
+.footer-company-info p{font-size:11px;color:rgba(255,255,255,0.35);line-height:2}
+.footer-company-info span{color:rgba(201,160,32,0.6)}
+.footer-h{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:20px}
+.footer-links{list-style:none}
+.footer-links li{margin-bottom:10px}
+.footer-links a{color:rgba(255,255,255,0.45);text-decoration:none;font-size:12px;letter-spacing:.5px;transition:color .3s}
+.footer-links a:hover{color:var(--gold)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:28px;border-top:1px solid rgba(255,255,255,0.06)}
+.footer-copy{font-size:11px;color:rgba(255,255,255,0.25);letter-spacing:.5px}
+.footer-socials{display:flex;gap:10px}
+.soc{width:32px;height:32px;border:1px solid rgba(201,160,32,0.2);color:rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-size:10px;text-decoration:none;transition:all .3s}
+.soc:hover{border-color:var(--gold);color:var(--gold)}
+@media(max-width:768px){
+  header{padding:0 24px}
+  nav{display:none}
+  .page-hero{padding:56px 24px 48px}
+  .page-hero::before{display:none}
+  .content{padding:48px 24px 60px}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .values-grid{grid-template-columns:1fr}
+  footer{padding:48px 24px 24px}
+  .footer-top{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;gap:16px;text-align:center}
+  .cta-block{padding:28px 20px}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">🚚 Livrare gratuită la comenzi peste 200 RON &nbsp;·&nbsp; Răspundem în max 2 ore &nbsp;·&nbsp; Garanție 30 zile</div>
+
+<header>
+  <a href="/" class="logo">WOW NanoCeramic</a>
+  <nav>
+    <a href="/#produs">Produs</a>
+    <a href="/#inainte-dupa">Înainte &amp; După</a>
+    <a href="/#kit">Kit Complet</a>
+    <a href="/#cum-functioneaza">Cum funcționează</a>
+    <a href="https://wa.me/40771181151" target="_blank">Contact</a>
+  </nav>
+  <a href="/" class="back-btn">← Înapoi</a>
+</header>
+
+<div class="page-hero">
+  <div class="page-badge">Povestea noastră</div>
+  <h1>Pasiune pentru <span>detaliu.</span><br/>Obsesie pentru <span>calitate.</span></h1>
+  <p class="lead">Suntem o echipă de pasionați auto din România care a transformat frustrarea față de plasticele degradate ale mașinilor într-un produs ce face diferența vizibilă de la prima aplicare.</p>
+</div>
+
+<div class="content">
+
+  <div class="section-block">
+    <h2><span>Povestea</span> noastră</h2>
+    <p>Totul a început dintr-o problemă pe care o cunoaște orice proprietar de mașină: plasticele exterioare care se albesc, se degradează și îmbătrânesc vizibil în câteva sezoane. Produsele existente pe piață fie nu țineau, fie erau greu de aplicat, fie costau o avere.</p>
+    <p>Am testat zeci de soluții. Niciuna nu ne-a convins complet. Așa că am decis să creăm propria formulă — un tratament ceramic care să restaureze și să protejeze cu adevărat, simplu de aplicat de oricine, cu efecte vizibile imediat și durabile în timp.</p>
+    <p>După luni de dezvoltare și testare pe zeci de mașini diferite, <strong>WOW NanoCeramic Restore &amp; Protect</strong> s-a născut. Fabricat în Uniunea Europeană, testat pe teren, cu rezultate pe care le puteți vedea chiar pe site-ul nostru.</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-box">
+      <span class="stat-num">2+</span>
+      <span class="stat-label">Ani protecție</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">30</span>
+      <span class="stat-label">Zile garanție satisfacție</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">UE</span>
+      <span class="stat-label">Fabricat în Europa</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">5'</span>
+      <span class="stat-label">Timp de aplicare</span>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <h2>Valorile <span>noastre</span></h2>
+    <div class="values-grid">
+      <div class="value-card">
+        <span class="value-icon">🔬</span>
+        <h3>Formulă testată</h3>
+        <p>Fiecare lot de producție trece prin teste riguroase înainte să ajungă la client. Nu facem compromisuri la calitate.</p>
+      </div>
+      <div class="value-card">
+        <span class="value-icon">🤝</span>
+        <h3>Transparență totală</h3>
+        <p>Spunem exact ce face produsul, cum se aplică și ce să te aștepți. Fără promisiuni exagerate, fără marketing înșelător.</p>
+      </div>
+      <div class="value-card">
+        <span class="value-icon">⚡</span>
+        <h3>Simplitate</h3>
+        <p>Un produs profesional care să poată fi aplicat de oricine, acasă, în 5 minute. Fără echipamente speciale, fără experiență necesară.</p>
+      </div>
+      <div class="value-card">
+        <span class="value-icon">🌍</span>
+        <h3>Fabricat în UE</span></h3>
+        <p>Producem în Uniunea Europeană, respectând standarde stricte de calitate și siguranță pentru oameni și mediu.</p>
+      </div>
+      <div class="value-card">
+        <span class="value-icon">💬</span>
+        <h3>Suport real</h3>
+        <p>Răspundem în maxim 2 ore. Nu chatboți, nu răspunsuri automate — oameni reali care cunosc produsul din experiență.</p>
+      </div>
+      <div class="value-card">
+        <span class="value-icon">✅</span>
+        <h3>Garanție 30 zile</h3>
+        <p>Dacă nu ești mulțumit din orice motiv, returnezi produsul și primești banii înapoi integral. Simplu și fără discuții.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <h2>Cum am <span>evoluat</span></h2>
+    <div class="story-line">
+      <div class="story-item">
+        <div class="story-dot"></div>
+        <span class="story-year">Începuturi</span>
+        <h3>Problema care ne-a motivat</h3>
+        <p>Frustrarea față de plasticele degradate și lipsa unui produs cu adevărat eficient pe piața românească ne-a împins să căutăm propria soluție.</p>
+      </div>
+      <div class="story-item">
+        <div class="story-dot"></div>
+        <span class="story-year">Dezvoltare</span>
+        <h3>Luni de teste și perfecționare</h3>
+        <p>Am testat formula pe zeci de mașini, în condiții diferite — vară, iarnă, mașini noi și vechi, plastic degradat sever sau ușor. Am ajustat până când rezultatele au fost constante.</p>
+      </div>
+      <div class="story-item">
+        <div class="story-dot"></div>
+        <span class="story-year">Lansare</span>
+        <h3>WOW NanoCeramic pe piață</h3>
+        <p>Am lansat primul nostru produs — WOW NanoCeramic Restore &amp; Protect — cu convingerea că orice mașină merită să arate impecabil, indiferent de vârstă.</p>
+      </div>
+      <div class="story-item">
+        <div class="story-dot"></div>
+        <span class="story-year">Viitor</span>
+        <h3>Extinderea gamei de produse</h3>
+        <p>Lucrăm la extinderea liniei de produse ceramice pentru îngrijire auto completă. Același standard de calitate, aceeași simplitate în aplicare.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <h2>Date despre <span>companie</span></h2>
+    <p>Activitatea noastră este desfășurată în cadrul <strong>SC STAR WOW S.R.L.</strong>, companie înregistrată legal în România, cu toate obligațiile fiscale și legale la zi.</p>
+    <ul style="list-style:none;padding:0;margin:16px 0">
+      <li style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);color:rgba(255,255,255,0.6);font-size:13px"><span style="color:rgba(201,160,32,0.7);margin-right:8px">Denumire:</span> SC STAR WOW S.R.L.</li>
+      <li style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);color:rgba(255,255,255,0.6);font-size:13px"><span style="color:rgba(201,160,32,0.7);margin-right:8px">CIF:</span> 51554728</li>
+      <li style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);color:rgba(255,255,255,0.6);font-size:13px"><span style="color:rgba(201,160,32,0.7);margin-right:8px">Nr. Reg. Com.:</span> J2025023173009</li>
+      <li style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);color:rgba(255,255,255,0.6);font-size:13px"><span style="color:rgba(201,160,32,0.7);margin-right:8px">Sediu:</span> Str. Muzeului 79 mansardă, 247065, Bujoreni, Vâlcea</li>
+      <li style="padding:8px 0;color:rgba(255,255,255,0.6);font-size:13px"><span style="color:rgba(201,160,32,0.7);margin-right:8px">Email:</span> <a href="mailto:contact@wownanoceramic.ro">contact@wownanoceramic.ro</a></li>
+    </ul>
+  </div>
+
+  <div class="cta-block">
+    <h3>Convinge-te singur</h3>
+    <p>Rezultatele se văd de la prima aplicare. Garanție 30 de zile — risc zero pentru tine.</p>
+    <a href="/#produs" class="btn-gold">Comandă Acum — 99 RON</a>
+  </div>
+
+</div>
+
+<footer id="contact">
+  <div class="footer-top">
+    <div>
+      <a href="/" class="footer-logo">WOW NanoCeramic</a>
+      <p class="footer-desc">Tratamente ceramice profesionale pentru protecția și restaurarea plasticelor auto exterioare. Produs în Uniunea Europeană.</p>
+      <div class="footer-company-info">
+        <p><strong>SC STAR WOW S.R.L.</strong></p>
+        <p><span>Nr. Reg. Com.:</span> J2025023173009</p>
+        <p><span>C.I.F.:</span> 51554728</p>
+        <p><span>Cont:</span> RO27RNCB0263181757720001</p>
+        <p><span>Bancă:</span> BANCA COMERCIALA ROMANA S.A.</p>
+        <p><span>Sediu:</span> Str. Muzeului 79 mansardă, 247065, Bujoreni, Valcea</p>
+      </div>
+    </div>
+    <div>
+      <div class="footer-h">Suport Clienți</div>
+      <ul class="footer-links">
+        <li><a href="https://wa.me/40771181151" target="_blank">Contact</a></li>
+        <li><a href="mailto:contact@wownanoceramic.ro">contact@wownanoceramic.ro</a></li>
+        <li><a href="tel:+40771181151">0771 181 151</a></li>
+        <li><a href="#">L–V: 09:00–15:00</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-h">Linkuri Utile</div>
+      <ul class="footer-links">
+        <li><a href="/cookies.html">Politica de Cookie-uri</a></li>
+        <li><a href="/gdpr.html">Politica de Confidențialitate</a></li>
+        <li><a href="/termeni.html">Termeni și condiții</a></li>
+        <li><a href="/returnare.html">Politica de returnare</a></li>
+        <li><a href="https://anpc.ro" target="_blank">ANPC</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 SC STAR WOW S.R.L. · Toate drepturile rezervate · wownanoceramic.ro</div>
+    <div class="footer-socials">
+      <a href="#" class="soc">fb</a>
+      <a href="#" class="soc">ig</a>
+      <a href="#" class="soc">tt</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

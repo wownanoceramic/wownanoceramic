@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Informații Transport | WOW NanoCeramic</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#080808;--black2:#111111;--black3:#1a1a1a;
+  --gold:#C9A020;--gold2:#E0B830;--white:#fff;--gray:#888;
+  --grad:linear-gradient(135deg,#F0C040 0%,#B8860B 40%,#F5D060 60%,#8B6508 100%)
+}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:'Montserrat',sans-serif;overflow-x:hidden}
+.topbar{background:var(--grad);color:var(--black);text-align:center;padding:10px 20px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+header{position:sticky;top:0;z-index:99;background:rgba(8,8,8,0.97);border-bottom:1px solid rgba(201,160,32,0.15);padding:0 60px;display:flex;align-items:center;justify-content:space-between;height:72px;backdrop-filter:blur(12px)}
+.logo{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;letter-spacing:3px;text-transform:uppercase;text-decoration:none}
+nav{display:flex;gap:28px}
+nav a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:500;transition:color .3s}
+nav a:hover{color:var(--gold)}
+.back-btn{background:transparent;border:1px solid rgba(201,160,32,0.4);color:var(--gold);padding:9px 20px;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-family:'Montserrat',sans-serif;font-weight:600;transition:all .3s;text-decoration:none;display:inline-block}
+.back-btn:hover{background:var(--grad);color:var(--black)}
+.page-hero{padding:80px 60px 60px;border-bottom:1px solid rgba(201,160,32,0.1)}
+.page-badge{display:inline-block;background:rgba(201,160,32,0.12);border:1px solid rgba(201,160,32,0.35);color:var(--gold);font-size:10px;letter-spacing:4px;text-transform:uppercase;padding:7px 18px;margin-bottom:24px;font-weight:600}
+.page-hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,4vw,60px);font-weight:700;color:var(--white);margin-bottom:16px}
+.page-hero h1 span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.page-hero p{color:rgba(255,255,255,0.5);font-size:13px;letter-spacing:1px}
+.content{max-width:860px;margin:0 auto;padding:64px 60px 80px}
+.section-block{margin-bottom:48px}
+.section-block h2{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--white);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(201,160,32,0.15)}
+.section-block h2 span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.section-block p{color:rgba(255,255,255,0.7);font-size:14px;line-height:1.9;margin-bottom:14px;font-weight:300}
+.section-block ul{margin:12px 0 14px 0;padding-left:0;list-style:none}
+.section-block ul li{color:rgba(255,255,255,0.7);font-size:14px;line-height:1.9;font-weight:300;padding:6px 0 6px 22px;position:relative;border-bottom:1px solid rgba(255,255,255,0.04)}
+.section-block ul li::before{content:'—';position:absolute;left:0;color:var(--gold);font-weight:700}
+.section-block a{color:var(--gold);text-decoration:none}
+.section-block a:hover{text-decoration:underline}
+.info-box{background:rgba(201,160,32,0.06);border:1px solid rgba(201,160,32,0.2);border-left:3px solid var(--gold);padding:20px 24px;margin:20px 0}
+.info-box p{margin:0;font-size:13px;color:rgba(255,255,255,0.75)}
+.info-box.green{background:rgba(50,180,80,0.06);border-color:rgba(50,180,80,0.3);border-left-color:#32b450}
+
+/* STATS STRIP */
+.stats-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(201,160,32,0.1);border:1px solid rgba(201,160,32,0.1);margin-bottom:48px}
+.stat-item{background:var(--black);padding:32px 24px;text-align:center}
+.stat-num{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:700;display:block;margin-bottom:6px}
+.stat-label{color:rgba(255,255,255,0.5);font-size:11px;letter-spacing:2px;text-transform:uppercase}
+
+/* TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0;margin:24px 0}
+.tl-item{display:flex;gap:24px;padding:20px 0;border-bottom:1px solid rgba(255,255,255,0.05);position:relative}
+.tl-item:last-child{border-bottom:none}
+.tl-icon{width:44px;height:44px;border:1px solid rgba(201,160,32,0.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:rgba(201,160,32,0.05)}
+.tl-content h3{color:var(--white);font-size:13px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;font-weight:600}
+.tl-content p{color:rgba(255,255,255,0.6);font-size:13px;line-height:1.7;margin:0}
+.tl-time{margin-left:auto;flex-shrink:0;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:12px;font-weight:700;letter-spacing:1px;padding-top:2px}
+
+/* PRICE TABLE */
+.price-table{width:100%;border-collapse:collapse;margin:20px 0}
+.price-table th{background:rgba(201,160,32,0.1);color:var(--gold);font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:12px 16px;text-align:left;border-bottom:1px solid rgba(201,160,32,0.2)}
+.price-table td{padding:14px 16px;font-size:13px;color:rgba(255,255,255,0.7);border-bottom:1px solid rgba(255,255,255,0.05);line-height:1.6}
+.price-table tr:hover td{background:rgba(255,255,255,0.02)}
+.price-free{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700;font-size:14px}
+
+footer{background:var(--black2);border-top:1px solid rgba(201,160,32,0.1);padding:60px 60px 32px}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.footer-logo{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;letter-spacing:3px;text-transform:uppercase;text-decoration:none;display:block;margin-bottom:12px}
+.footer-desc{color:rgba(255,255,255,0.4);font-size:12px;line-height:1.8;margin-bottom:20px}
+.footer-company-info p{font-size:11px;color:rgba(255,255,255,0.35);line-height:2}
+.footer-company-info span{color:rgba(201,160,32,0.6)}
+.footer-h{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:20px}
+.footer-links{list-style:none}
+.footer-links li{margin-bottom:10px}
+.footer-links a{color:rgba(255,255,255,0.45);text-decoration:none;font-size:12px;letter-spacing:.5px;transition:color .3s}
+.footer-links a:hover{color:var(--gold)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:28px;border-top:1px solid rgba(255,255,255,0.06)}
+.footer-copy{font-size:11px;color:rgba(255,255,255,0.25);letter-spacing:.5px}
+.footer-socials{display:flex;gap:10px}
+.soc{width:32px;height:32px;border:1px solid rgba(201,160,32,0.2);color:rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-size:10px;text-decoration:none;transition:all .3s}
+.soc:hover{border-color:var(--gold);color:var(--gold)}
+@media(max-width:768px){
+  header{padding:0 24px}
+  nav{display:none}
+  .page-hero{padding:48px 24px 40px}
+  .content{padding:48px 24px 60px}
+  .stats-strip{grid-template-columns:1fr}
+  footer{padding:48px 24px 24px}
+  .footer-top{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;gap:16px;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">🚚 Livrare gratuită la comenzi peste 200 RON &nbsp;·&nbsp; Răspundem în max 2 ore &nbsp;·&nbsp; Garanție 30 zile</div>
+
+<header>
+  <a href="/" class="logo">WOW NanoCeramic</a>
+  <nav>
+    <a href="/#produs">Produs</a>
+    <a href="/#inainte-dupa">Înainte &amp; După</a>
+    <a href="/#kit">Kit Complet</a>
+    <a href="/#cum-functioneaza">Cum funcționează</a>
+    <a href="https://wa.me/40771181151" target="_blank">Contact</a>
+  </nav>
+  <a href="/" class="back-btn">← Înapoi</a>
+</header>
+
+<div class="page-hero">
+  <div class="page-badge">Livrare · Tracking · Costuri</div>
+  <h1>Informații <span>Transport</span></h1>
+  <p>Livrăm rapid în toată România prin Sameday Courier</p>
+</div>
+
+<div class="content">
+
+  <div class="stats-strip">
+    <div class="stat-item">
+      <span class="stat-num">24h</span>
+      <span class="stat-label">Termen livrare</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">0 RON</span>
+      <span class="stat-label">Cost livrare peste 200 RON</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">100%</span>
+      <span class="stat-label">Tracking în timp real</span>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <h2><span>1.</span> Partenerul nostru de curierat</h2>
+    <p>Toate comenzile sunt expediate prin <strong>Sameday Courier</strong>, unul dintre cei mai rapizi și de încredere curieri din România. Sameday oferă livrare în 24 de ore în majoritatea orașelor din țară.</p>
+    <div class="info-box green">
+      <p>✅ Imediat după expedierea coletului, primiți pe email <strong>numărul AWB</strong> pentru urmărirea în timp real a comenzii pe <a href="https://sameday.ro" target="_blank">sameday.ro</a>.</p>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <h2><span>2.</span> Termene de livrare</h2>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-icon">📦</div>
+        <div class="tl-content">
+          <h3>Plasați comanda</h3>
+          <p>Comanda este înregistrată și confirmată automat pe email.</p>
+        </div>
+        <div class="tl-time">Ziua 0</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-icon">⚙️</div>
+        <div class="tl-content">
+          <h3>Procesare și expediere</h3>
+          <p>Comanda este pregătită și predată curierului Sameday. Primiți AWB-ul pe email.</p>
+        </div>
+        <div class="tl-time">Ziua 1</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-icon">🚚</div>
+        <div class="tl-content">
+          <h3>Livrare la ușă</h3>
+          <p>Curiorul vă contactează telefonic înainte de livrare. Primiți coletul acasă sau la birou.</p>
+        </div>
+        <div class="tl-time">Ziua 1–2</div>
+      </div>
+    </div>
+    <div class="info-box">
+      <p>⏰ Comenzile plasate <strong>după ora 14:00</strong> sau în weekend sunt procesate în <strong>prima zi lucrătoare</strong> următoare.</p>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <h2><span>3.</span> Costuri de livrare</h2>
+    <table class="price-table">
+      <tr>
+        <th>Valoare comandă</th>
+        <th>Metodă plată</th>
+        <th>Cost livrare</th>
+      </tr>
+      <tr>
+        <td>Peste 200 RON</td>
+        <td>Card sau ramburs</td>
+        <td><span class="price-free">GRATUIT</span></td>
+      </tr>
+      <tr>
+        <td>Sub 200 RON</td>
+        <td>Card online</td>
+        <td>15 RON</td>
+      </tr>
+      <tr>
+        <td>Sub 200 RON</td>
+        <td>Ramburs (la livrare)</td>
+        <td>15 RON + 10 RON taxă procesare</td>
+      </tr>
+    </table>
+    <div class="info-box green">
+      <p>💡 <strong>Sfat:</strong> La prețul actual de 99 RON, comandând <strong>2 buc.</strong> (198 RON) beneficiezi de livrare gratuită și ai un kit de rezervă pregătit!</p>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <h2><span>4.</span> Zona de livrare</h2>
+    <p>Livrăm în toată România — orașe mari, comune și sate. Sameday acoperă întreaga țară prin rețeaua sa de curierat.</p>
+    <ul>
+      <li>Livrare la <strong>adresă</strong> — oriunde în România</li>
+      <li>Livrare la <strong>easybox</strong> — în locațiile Sameday disponibile (opțiune disponibilă în curând)</li>
+      <li>Nu livrăm momentan în afara României</li>
+    </ul>
+  </div>
+
+  <div class="section-block">
+    <h2><span>5.</span> Urmărirea comenzii</h2>
+    <p>După expediere, primiți pe email numărul AWB cu care puteți urmări coletul în timp real:</p>
+    <ul>
+      <li>Accesați <a href="https://sameday.ro" target="_blank">sameday.ro</a> și introduceți numărul AWB</li>
+      <li>Urmăriți statusul livrării în timp real</li>
+      <li>Curiorul vă va contacta telefonic cu 30–60 minute înainte de livrare</li>
+    </ul>
+  </div>
+
+  <div class="section-block">
+    <h2><span>6.</span> Probleme la livrare</h2>
+    <ul>
+      <li><strong>Colet deteriorat</strong> — refuzați coletul și contactați-ne imediat la <a href="mailto:contact@wownanoceramic.ro">contact@wownanoceramic.ro</a></li>
+      <li><strong>Curiorul nu v-a găsit acasă</strong> — Sameday va încerca livrarea a doua zi sau vă va contacta pentru reprogramare</li>
+      <li><strong>Adresă greșită</strong> — contactați-ne cât mai repede la <a href="tel:+40771181151">0771 181 151</a> pentru a corecta adresa înainte de expediere</li>
+      <li><strong>Colet pierdut</strong> — deschidem investigație cu Sameday și vă trimitem un colet nou fără costuri suplimentare</li>
+    </ul>
+  </div>
+
+  <div class="section-block">
+    <h2><span>7.</span> Contact</h2>
+    <ul>
+      <li><strong>Email:</strong> <a href="mailto:contact@wownanoceramic.ro">contact@wownanoceramic.ro</a></li>
+      <li><strong>Telefon / WhatsApp:</strong> <a href="https://wa.me/40771181151">0771 181 151</a></li>
+      <li><strong>Program:</strong> Luni–Vineri, 09:00–15:00</li>
+      <li><strong>Răspuns:</strong> în maximum 2 ore în timpul programului</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer id="contact">
+  <div class="footer-top">
+    <div>
+      <a href="/" class="footer-logo">WOW NanoCeramic</a>
+      <p class="footer-desc">Tratamente ceramice profesionale pentru protecția și restaurarea plasticelor auto exterioare. Produs în Uniunea Europeană.</p>
+      <div class="footer-company-info">
+        <p><strong>SC STAR WOW S.R.L.</strong></p>
+        <p><span>Nr. Reg. Com.:</span> J2025023173009</p>
+        <p><span>C.I.F.:</span> 51554728</p>
+        <p><span>Cont:</span> RO27RNCB0263181757720001</p>
+        <p><span>Bancă:</span> BANCA COMERCIALA ROMANA S.A.</p>
+        <p><span>Sediu:</span> Str. Muzeului 79 mansardă, 247065, Bujoreni, Valcea</p>
+      </div>
+    </div>
+    <div>
+      <div class="footer-h">Suport Clienți</div>
+      <ul class="footer-links">
+        <li><a href="https://wa.me/40771181151" target="_blank">Contact</a></li>
+        <li><a href="mailto:contact@wownanoceramic.ro">contact@wownanoceramic.ro</a></li>
+        <li><a href="tel:+40771181151">0771 181 151</a></li>
+        <li><a href="#">L–V: 09:00–15:00</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-h">Linkuri Utile</div>
+      <ul class="footer-links">
+        <li><a href="/cookies.html">Politica de Cookie-uri</a></li>
+        <li><a href="/gdpr.html">Politica de Confidențialitate</a></li>
+        <li><a href="/termeni.html">Termeni și condiții</a></li>
+        <li><a href="/returnare.html">Politica de returnare</a></li>
+        <li><a href="https://anpc.ro" target="_blank">ANPC</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 SC STAR WOW S.R.L. · Toate drepturile rezervate · wownanoceramic.ro</div>
+    <div class="footer-socials">
+      <a href="#" class="soc">fb</a>
+      <a href="#" class="soc">ig</a>
+      <a href="#" class="soc">tt</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
