@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Termeni și Condiții | WOW NanoCeramic</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#080808;--black2:#111111;--black3:#1a1a1a;
+  --gold:#C9A020;--gold2:#E0B830;--white:#fff;--gray:#888;
+  --grad:linear-gradient(135deg,#F0C040 0%,#B8860B 40%,#F5D060 60%,#8B6508 100%)
+}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:'Montserrat',sans-serif;overflow-x:hidden}
+.topbar{background:var(--grad);color:var(--black);text-align:center;padding:10px 20px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+header{position:sticky;top:0;z-index:99;background:rgba(8,8,8,0.97);border-bottom:1px solid rgba(201,160,32,0.15);padding:0 60px;display:flex;align-items:center;justify-content:space-between;height:72px;backdrop-filter:blur(12px)}
+.logo{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;letter-spacing:3px;text-transform:uppercase;text-decoration:none}
+nav{display:flex;gap:28px}
+nav a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:500;transition:color .3s}
+nav a:hover{color:var(--gold)}
+.back-btn{background:transparent;border:1px solid rgba(201,160,32,0.4);color:var(--gold);padding:9px 20px;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-family:'Montserrat',sans-serif;font-weight:600;transition:all .3s;text-decoration:none;display:inline-block}
+.back-btn:hover{background:var(--grad);color:var(--black)}
+.page-hero{padding:80px 60px 60px;border-bottom:1px solid rgba(201,160,32,0.1)}
+.page-badge{display:inline-block;background:rgba(201,160,32,0.12);border:1px solid rgba(201,160,32,0.35);color:var(--gold);font-size:10px;letter-spacing:4px;text-transform:uppercase;padding:7px 18px;margin-bottom:24px;font-weight:600}
+.page-hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,4vw,60px);font-weight:700;color:var(--white);margin-bottom:16px}
+.page-hero h1 span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.page-hero p{color:rgba(255,255,255,0.5);font-size:13px;letter-spacing:1px}
+.content{max-width:860px;margin:0 auto;padding:64px 60px 80px}
+.section-block{margin-bottom:48px}
+.section-block h2{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--white);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(201,160,32,0.15)}
+.section-block h2 span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.section-block p{color:rgba(255,255,255,0.7);font-size:14px;line-height:1.9;margin-bottom:14px;font-weight:300}
+.section-block ul{margin:12px 0 14px 0;padding-left:0;list-style:none}
+.section-block ul li{color:rgba(255,255,255,0.7);font-size:14px;line-height:1.9;font-weight:300;padding:6px 0 6px 22px;position:relative;border-bottom:1px solid rgba(255,255,255,0.04)}
+.section-block ul li::before{content:'—';position:absolute;left:0;color:var(--gold);font-weight:700}
+.section-block a{color:var(--gold);text-decoration:none}
+.section-block a:hover{text-decoration:underline}
+.info-box{background:rgba(201,160,32,0.06);border:1px solid rgba(201,160,32,0.2);border-left:3px solid var(--gold);padding:20px 24px;margin:20px 0}
+.info-box p{margin:0;font-size:13px;color:rgba(255,255,255,0.75)}
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:24px 0}
+.step-card{background:rgba(255,255,255,0.03);border:1px solid rgba(201,160,32,0.12);padding:20px 16px;text-align:center}
+.step-num{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:700;display:block;margin-bottom:8px}
+.step-card p{color:rgba(255,255,255,0.6);font-size:12px;line-height:1.6;margin:0}
+footer{background:var(--black2);border-top:1px solid rgba(201,160,32,0.1);padding:60px 60px 32px}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.footer-logo{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;letter-spacing:3px;text-transform:uppercase;text-decoration:none;display:block;margin-bottom:12px}
+.footer-desc{color:rgba(255,255,255,0.4);font-size:12px;line-height:1.8;margin-bottom:20px}
+.footer-company-info p{font-size:11px;color:rgba(255,255,255,0.35);line-height:2}
+.footer-company-info span{color:rgba(201,160,32,0.6)}
+.footer-h{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:20px}
+.footer-links{list-style:none}
+.footer-links li{margin-bottom:10px}
+.footer-links a{color:rgba(255,255,255,0.45);text-decoration:none;font-size:12px;letter-spacing:.5px;transition:color .3s}
+.footer-links a:hover{color:var(--gold)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:28px;border-top:1px solid rgba(255,255,255,0.06)}
+.footer-copy{font-size:11px;color:rgba(255,255,255,0.25);letter-spacing:.5px}
+.footer-socials{display:flex;gap:10px}
+.soc{width:32px;height:32px;border:1px solid rgba(201,160,32,0.2);color:rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-size:10px;text-decoration:none;transition:all .3s}
+.soc:hover{border-color:var(--gold);color:var(--gold)}
+@media(max-width:768px){
+  header{padding:0 24px}
+  nav{display:none}
+  .page-hero{padding:48px 24px 40px}
+  .content{padding:48px 24px 60px}
+  .steps-grid{grid-template-columns:1fr 1fr}
+  footer{padding:48px 24px 24px}
+  .footer-top{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;gap:16px;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">🚚 Livrare gratuită la comenzi peste 200 RON &nbsp;·&nbsp; Răspundem în max 2 ore &nbsp;·&nbsp; Garanție 30 zile</div>
+
+<header>
+  <a href="/" class="logo">WOW NanoCeramic</a>
+  <nav>
+    <a href="/#produs">Produs</a>
+    <a href="/#inainte-dupa">Înainte &amp; După</a>
+    <a href="/#kit">Kit Complet</a>
+    <a href="/#cum-functioneaza">Cum funcționează</a>
+    <a href="/#contact">Contact</a>
+  </nav>
+  <a href="/" class="back-btn">← Înapoi</a>
+</header>
+
+<div class="page-hero">
+  <div class="page-badge">Contract · Drepturi &amp; Obligații</div>
+  <h1>Termeni și <span>Condiții</span></h1>
+  <p>Ultima actualizare: Mai 2025 &nbsp;·&nbsp; SC STAR WOW S.R.L.</p>
+</div>
+
+<div class="content">
+
+  <div class="section-block">
+    <h2><span>1.</span> Informații generale</h2>
+    <p>Prezentele Termeni și Condiții reglementează utilizarea site-ului <strong>www.wownanoceramic.ro</strong> și achiziționarea produselor oferite de <strong>SC STAR WOW S.R.L.</strong>, cu sediul în Str. Muzeului 79 mansardă, 247065, Bujoreni, Vâlcea, CIF 51554728, Nr. Reg. Com. J2025023173009.</p>
+    <p>Prin accesarea site-ului și plasarea unei comenzi, confirmați că ați citit, înțeles și acceptat în totalitate acești Termeni și Condiții. Dacă nu sunteți de acord, vă rugăm să nu utilizați site-ul.</p>
+  </div>
+
+  <div class="section-block">
+    <h2><span>2.</span> Produsele</h2>
+    <p>Site-ul comercializează produse de îngrijire auto, în special tratamente ceramice pentru restaurarea și protecția plasticelor exterioare. Toate produsele sunt fabricate în Uniunea Europeană.</p>
+    <ul>
+      <li>Imaginile produselor sunt orientative — culorile reale pot varia ușor în funcție de ecranul dvs.</li>
+      <li>Descrierile produselor sunt cât mai precise posibil — ne rezervăm dreptul de a corecta eventuale erori</li>
+      <li>Disponibilitatea produselor este indicată în timp real — comenzile se onorează în limita stocului disponibil</li>
+      <li>Prețurile sunt afișate în RON și includ TVA, conform legislației române</li>
+    </ul>
+  </div>
+
+  <div class="section-block">
+    <h2><span>3.</span> Procesul de comandă</h2>
+    <p>Plasarea unei comenzi se realizează în 4 pași simpli:</p>
+    <div class="steps-grid">
+      <div class="step-card">
+        <span class="step-num">1</span>
+        <p>Adăugați produsul în coș și selectați cantitatea dorită</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">2</span>
+        <p>Completați datele de livrare (nume, adresă, telefon, email)</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">3</span>
+        <p>Alegeți metoda de plată: card online (Stripe) sau ramburs</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">4</span>
+        <p>Confirmați comanda — primiți email de confirmare imediat</p>
+      </div>
+    </div>
+    <div class="info-box">
+      <p>📌 Contractul de vânzare-cumpărare se consideră încheiat în momentul în care primiți confirmarea comenzii pe email.</p>
+    </div>
+    <p>Ne rezervăm dreptul de a anula o comandă în cazul în care produsul nu mai este disponibil în stoc, prețul a fost afișat eronat sau există suspiciuni de fraudă. Veți fi notificat imediat și veți primi rambursarea integrală.</p>
+  </div>
+
+  <div class="section-block">
+    <h2><span>4.</span> Prețuri și plată</h2>
+    <ul>
+      <li>Toate prețurile sunt exprimate în <strong>Lei (RON)</strong> și includ TVA 19%</li>
+      <li><strong>Plată cu cardul</strong> — procesată securizat prin Stripe (Visa, Mastercard); suma este debitată imediat la confirmarea comenzii</li>
+      <li><strong>Plată ramburs</strong> — plata se efectuează în numerar la livrare; se aplică o taxă de procesare de <strong>10 RON</strong></li>
+      <li>Livrarea este <strong>gratuită</strong> pentru comenzi de minimum 200 RON</li>
+      <li>Ne rezervăm dreptul de a modifica prețurile fără notificare prealabilă — prețul valabil este cel afișat la momentul plasării comenzii</li>
+    </ul>
+  </div>
+
+  <div class="section-block">
+    <h2><span>5.</span> Livrare și transport</h2>
+    <ul>
+      <li>Livrarea se efectuează prin <strong>Sameday Courier</strong> pe teritoriul României</li>
+      <li>Termenul de livrare este de <strong>24–48 ore lucrătoare</strong> de la confirmarea comenzii</li>
+      <li>Veți primi pe email numărul de urmărire (AWB) imediat după expedierea coletului</li>
+      <li>Comenzile plasate după ora 14:00 sau în weekend sunt procesate în prima zi lucrătoare</li>
+      <li>Nu ne asumăm răspunderea pentru întârzieri cauzate de curier, condiții meteorologice sau forță majoră</li>
+    </ul>
+    <div class="info-box">
+      <p>⚠️ La primirea coletului, verificați integritatea ambalajului în prezența curierului. Orice deteriorare vizibilă trebuie menționată pe documentul de livrare.</p>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <h2><span>6.</span> Garanție și conformitate</h2>
+    <p>Produsele noastre beneficiază de <strong>garanție de conformitate de 2 ani</strong> conform Legii nr. 449/2003 privind vânzarea produselor și garanțiile asociate acestora.</p>
+    <ul>
+      <li>Garanția acoperă defectele de fabricație constatate în condiții normale de utilizare</li>
+      <li>Garanția nu acoperă deteriorările cauzate de utilizare incorectă sau nerespectarea instrucțiunilor</li>
+      <li>Pentru reclamații în garanție, contactați-ne la <a href="mailto:contact@wownanoceramic.ro">contact@wownanoceramic.ro</a></li>
+      <li>Oferim suplimentar o <strong>garanție de satisfacție de 30 de zile</strong> — dacă nu sunteți mulțumit, returnați produsul neutilizat</li>
+    </ul>
+  </div>
+
+  <div class="section-block">
+    <h2><span>7.</span> Dreptul de retragere</h2>
+    <p>Conform OUG nr. 34/2014, aveți dreptul de a vă retrage din contract în termen de <strong>14 zile calendaristice</strong> de la primirea produsului, fără a fi nevoie să justificați decizia.</p>
+    <ul>
+      <li>Notificați-ne intenția de returnare la <a href="mailto:contact@wownanoceramic.ro">contact@wownanoceramic.ro</a></li>
+      <li>Produsul trebuie returnat în ambalajul original, neutilizat și în stare perfectă</li>
+      <li>Costul returnării este suportat de client, cu excepția cazurilor în care produsul este defect</li>
+      <li>Rambursarea se efectuează în maximum <strong>14 zile</strong> de la primirea produsului returnat</li>
+    </ul>
+    <p>Pentru detalii complete, consultați <a href="/returnare.html">Politica de Returnare</a>.</p>
+  </div>
+
+  <div class="section-block">
+    <h2><span>8.</span> Proprietate intelectuală</h2>
+    <p>Tot conținutul site-ului www.wownanoceramic.ro — texte, imagini, logo-uri, design — este proprietatea exclusivă a SC STAR WOW S.R.L. și este protejat de legislația privind drepturile de autor.</p>
+    <p>Este interzisă reproducerea, distribuirea sau utilizarea oricărui element fără acordul scris prealabil al SC STAR WOW S.R.L.</p>
+  </div>
+
+  <div class="section-block">
+    <h2><span>9.</span> Limitarea răspunderii</h2>
+    <p>SC STAR WOW S.R.L. nu poate fi ținută răspunzătoare pentru:</p>
+    <ul>
+      <li>Daune rezultate din utilizarea incorectă a produselor, nerespectând instrucțiunile furnizate</li>
+      <li>Întreruperi temporare ale site-ului cauzate de mentenanță sau factori externi</li>
+      <li>Erori de tipărire sau afișare a prețurilor sau specificațiilor tehnice</li>
+      <li>Daune indirecte sau consecvente rezultate din utilizarea sau imposibilitatea utilizării produselor</li>
+    </ul>
+  </div>
+
+  <div class="section-block">
+    <h2><span>10.</span> Legea aplicabilă și litigii</h2>
+    <p>Prezentele Termeni și Condiții sunt guvernate de legislația română. Orice litigiu va fi soluționat pe cale amiabilă. În cazul în care nu se ajunge la o înțelegere, competența revine instanțelor judecătorești din România.</p>
+    <p>Puteți apela și la soluționarea alternativă a litigiilor prin intermediul <strong>ANPC</strong> (<a href="https://anpc.ro" target="_blank">anpc.ro</a>) sau al platformei europene <a href="https://ec.europa.eu/consumers/odr" target="_blank">SOL (ec.europa.eu/consumers/odr)</a>.</p>
+  </div>
+
+  <div class="section-block">
+    <h2><span>11.</span> Contact</h2>
+    <p>Pentru orice întrebări legate de acești Termeni și Condiții:</p>
+    <ul>
+      <li><strong>Email:</strong> <a href="mailto:contact@wownanoceramic.ro">contact@wownanoceramic.ro</a></li>
+      <li><strong>Telefon:</strong> <a href="tel:+40771181151">0771 181 151</a></li>
+      <li><strong>Program:</strong> Luni–Vineri, 09:00–15:00</li>
+      <li><strong>Firmă:</strong> SC STAR WOW S.R.L., CIF 51554728</li>
+      <li><strong>Adresă:</strong> Str. Muzeului 79 mansardă, 247065, Bujoreni, Vâlcea</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer id="contact">
+  <div class="footer-top">
+    <div>
+      <a href="/" class="footer-logo">WOW NanoCeramic</a>
+      <p class="footer-desc">Tratamente ceramice profesionale pentru protecția și restaurarea plasticelor auto exterioare. Produs în Uniunea Europeană.</p>
+      <div class="footer-company-info">
+        <p><strong>SC STAR WOW S.R.L.</strong></p>
+        <p><span>Nr. Reg. Com.:</span> J2025023173009</p>
+        <p><span>C.I.F.:</span> 51554728</p>
+        <p><span>Cont:</span> RO27RNCB0263181757720001</p>
+        <p><span>Bancă:</span> BANCA COMERCIALA ROMANA S.A.</p>
+        <p><span>Sediu:</span> Str. Muzeului 79 mansardă, 247065, Bujoreni, Valcea</p>
+      </div>
+    </div>
+    <div>
+      <div class="footer-h">Suport Clienți</div>
+      <ul class="footer-links">
+        <li><a href="/#contact">Contact</a></li>
+        <li><a href="mailto:contact@wownanoceramic.ro">contact@wownanoceramic.ro</a></li>
+        <li><a href="#">L–V: 09:00–15:00</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-h">Linkuri Utile</div>
+      <ul class="footer-links">
+        <li><a href="/cookies.html">Politica de Cookie-uri</a></li>
+        <li><a href="/gdpr.html">Politica de Confidențialitate</a></li>
+        <li><a href="/termeni.html">Termeni și condiții</a></li>
+        <li><a href="/returnare.html">Politica de returnare</a></li>
+        <li><a href="https://anpc.ro" target="_blank">ANPC</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 SC STAR WOW S.R.L. · Toate drepturile rezervate · wownanoceramic.ro</div>
+    <div class="footer-socials">
+      <a href="#" class="soc">fb</a>
+      <a href="#" class="soc">ig</a>
+      <a href="#" class="soc">tt</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

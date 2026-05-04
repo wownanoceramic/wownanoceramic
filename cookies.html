@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Politica de Cookie-uri | WOW NanoCeramic</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#080808;--black2:#111111;--black3:#1a1a1a;
+  --gold:#C9A020;--gold2:#E0B830;--white:#fff;--gray:#888;
+  --grad:linear-gradient(135deg,#F0C040 0%,#B8860B 40%,#F5D060 60%,#8B6508 100%)
+}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:'Montserrat',sans-serif;overflow-x:hidden}
+
+.topbar{background:var(--grad);color:var(--black);text-align:center;padding:10px 20px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase}
+
+header{position:sticky;top:0;z-index:99;background:rgba(8,8,8,0.97);border-bottom:1px solid rgba(201,160,32,0.15);padding:0 60px;display:flex;align-items:center;justify-content:space-between;height:72px;backdrop-filter:blur(12px)}
+.logo{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;letter-spacing:3px;text-transform:uppercase;text-decoration:none}
+nav{display:flex;gap:28px}
+nav a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:500;transition:color .3s}
+nav a:hover{color:var(--gold)}
+.back-btn{background:transparent;border:1px solid rgba(201,160,32,0.4);color:var(--gold);padding:9px 20px;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-family:'Montserrat',sans-serif;font-weight:600;transition:all .3s;text-decoration:none;display:inline-block}
+.back-btn:hover{background:var(--grad);color:var(--black)}
+
+/* PAGE HERO */
+.page-hero{padding:80px 60px 60px;border-bottom:1px solid rgba(201,160,32,0.1)}
+.page-badge{display:inline-block;background:rgba(201,160,32,0.12);border:1px solid rgba(201,160,32,0.35);color:var(--gold);font-size:10px;letter-spacing:4px;text-transform:uppercase;padding:7px 18px;margin-bottom:24px;font-weight:600}
+.page-hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,4vw,60px);font-weight:700;color:var(--white);margin-bottom:16px}
+.page-hero h1 span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.page-hero p{color:rgba(255,255,255,0.5);font-size:13px;letter-spacing:1px}
+
+/* CONTENT */
+.content{max-width:860px;margin:0 auto;padding:64px 60px 80px}
+.section-block{margin-bottom:48px}
+.section-block h2{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--white);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(201,160,32,0.15)}
+.section-block h2 span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.section-block p{color:rgba(255,255,255,0.7);font-size:14px;line-height:1.9;margin-bottom:14px;font-weight:300}
+.section-block ul{margin:12px 0 14px 0;padding-left:0;list-style:none}
+.section-block ul li{color:rgba(255,255,255,0.7);font-size:14px;line-height:1.9;font-weight:300;padding:6px 0 6px 22px;position:relative;border-bottom:1px solid rgba(255,255,255,0.04)}
+.section-block ul li::before{content:'—';position:absolute;left:0;color:var(--gold);font-weight:700}
+.section-block a{color:var(--gold);text-decoration:none}
+.section-block a:hover{text-decoration:underline}
+
+/* TABLE */
+.cookie-table{width:100%;border-collapse:collapse;margin:20px 0}
+.cookie-table th{background:rgba(201,160,32,0.1);color:var(--gold);font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:12px 16px;text-align:left;border-bottom:1px solid rgba(201,160,32,0.2)}
+.cookie-table td{padding:12px 16px;font-size:13px;color:rgba(255,255,255,0.7);border-bottom:1px solid rgba(255,255,255,0.05);vertical-align:top;line-height:1.7}
+.cookie-table tr:hover td{background:rgba(255,255,255,0.02)}
+
+/* HIGHLIGHT BOX */
+.info-box{background:rgba(201,160,32,0.06);border:1px solid rgba(201,160,32,0.2);border-left:3px solid var(--gold);padding:20px 24px;margin:20px 0}
+.info-box p{margin:0;font-size:13px;color:rgba(255,255,255,0.75)}
+
+/* FOOTER */
+footer{background:var(--black2);border-top:1px solid rgba(201,160,32,0.1);padding:60px 60px 32px}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.footer-logo{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;letter-spacing:3px;text-transform:uppercase;text-decoration:none;display:block;margin-bottom:12px}
+.footer-desc{color:rgba(255,255,255,0.4);font-size:12px;line-height:1.8;margin-bottom:20px}
+.footer-company-info p{font-size:11px;color:rgba(255,255,255,0.35);line-height:2;letter-spacing:.3px}
+.footer-company-info span{color:rgba(201,160,32,0.6)}
+.footer-h{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:20px}
+.footer-links{list-style:none}
+.footer-links li{margin-bottom:10px}
+.footer-links a{color:rgba(255,255,255,0.45);text-decoration:none;font-size:12px;letter-spacing:.5px;transition:color .3s}
+.footer-links a:hover{color:var(--gold)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:28px;border-top:1px solid rgba(255,255,255,0.06)}
+.footer-copy{font-size:11px;color:rgba(255,255,255,0.25);letter-spacing:.5px}
+.footer-socials{display:flex;gap:10px}
+.soc{width:32px;height:32px;border:1px solid rgba(201,160,32,0.2);color:rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-size:10px;text-decoration:none;transition:all .3s;letter-spacing:0}
+.soc:hover{border-color:var(--gold);color:var(--gold)}
+
+@media(max-width:768px){
+  header{padding:0 24px}
+  nav{display:none}
+  .page-hero{padding:48px 24px 40px}
+  .content{padding:48px 24px 60px}
+  footer{padding:48px 24px 24px}
+  .footer-top{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;gap:16px;text-align:center}
+  .cookie-table{display:block;overflow-x:auto}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">🚚 Livrare gratuită la comenzi peste 200 RON &nbsp;·&nbsp; Răspundem în max 2 ore &nbsp;·&nbsp; Garanție 30 zile</div>
+
+<header>
+  <a href="/" class="logo">WOW NanoCeramic</a>
+  <nav>
+    <a href="/#produs">Produs</a>
+    <a href="/#inainte-dupa">Înainte &amp; După</a>
+    <a href="/#kit">Kit Complet</a>
+    <a href="/#cum-functioneaza">Cum funcționează</a>
+    <a href="/#contact">Contact</a>
+  </nav>
+  <a href="/" class="back-btn">← Înapoi</a>
+</header>
+
+<div class="page-hero">
+  <div class="page-badge">Transparență &amp; Conformitate</div>
+  <h1>Politica de <span>Cookie-uri</span></h1>
+  <p>Ultima actualizare: Mai 2025 &nbsp;·&nbsp; SC STAR WOW S.R.L.</p>
+</div>
+
+<div class="content">
+
+  <div class="section-block">
+    <h2><span>1.</span> Ce sunt cookie-urile?</h2>
+    <p>Cookie-urile sunt fișiere text de mici dimensiuni stocate pe dispozitivul dumneavoastră (calculator, telefon, tabletă) atunci când vizitați un site web. Acestea permit site-ului să vă recunoască la vizitele ulterioare și să rețină anumite preferințe.</p>
+    <p>Cookie-urile nu conțin viruși și nu pot accesa informații de pe dispozitivul dumneavoastră. Ele sunt folosite exclusiv pentru a îmbunătăți experiența dvs. pe site-ul nostru.</p>
+  </div>
+
+  <div class="section-block">
+    <h2><span>2.</span> Ce tipuri de cookie-uri folosim?</h2>
+
+    <table class="cookie-table">
+      <tr>
+        <th>Tip</th>
+        <th>Scop</th>
+        <th>Durată</th>
+      </tr>
+      <tr>
+        <td><strong>Cookie-uri esențiale</strong></td>
+        <td>Necesare pentru funcționarea site-ului (sesiune coș de cumpărături, preferințe limbă)</td>
+        <td>Sesiune / 30 zile</td>
+      </tr>
+      <tr>
+        <td><strong>Cookie-uri funcționale</strong></td>
+        <td>Rețin preferințele dvs. (metodă de plată selectată, cantitate produse)</td>
+        <td>30 zile</td>
+      </tr>
+      <tr>
+        <td><strong>Cookie-uri analitice</strong></td>
+        <td>Ne ajută să înțelegem cum este utilizat site-ul (pagini vizitate, timp petrecut)</td>
+        <td>până la 2 ani</td>
+      </tr>
+      <tr>
+        <td><strong>Cookie-uri de marketing</strong></td>
+        <td>Utilizate pentru reclame relevante pe rețelele sociale (Facebook Pixel, Google Ads)</td>
+        <td>până la 90 zile</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section-block">
+    <h2><span>3.</span> Cookie-uri terțe</h2>
+    <p>Site-ul nostru poate utiliza servicii de la terțe părți care instalează propriile cookie-uri pe dispozitivul dvs.:</p>
+    <ul>
+      <li><strong>Stripe</strong> — procesator de plăți, pentru securizarea tranzacțiilor</li>
+      <li><strong>Google Analytics</strong> — analiză trafic și comportament utilizatori</li>
+      <li><strong>Facebook Pixel</strong> — măsurarea eficienței reclamelor</li>
+      <li><strong>Google Fonts</strong> — încărcarea fonturilor tipografice</li>
+    </ul>
+    <p>Aceste companii au propriile politici de confidențialitate, independente de politica noastră.</p>
+  </div>
+
+  <div class="section-block">
+    <h2><span>4.</span> Cum puteți controla cookie-urile?</h2>
+    <p>Aveți dreptul de a accepta sau refuza cookie-urile. Majoritatea browserelor vă permit să controlați cookie-urile prin setările lor:</p>
+    <ul>
+      <li><strong>Google Chrome:</strong> Setări → Confidențialitate și securitate → Cookie-uri</li>
+      <li><strong>Mozilla Firefox:</strong> Opțiuni → Confidențialitate și securitate</li>
+      <li><strong>Safari:</strong> Preferințe → Confidențialitate</li>
+      <li><strong>Microsoft Edge:</strong> Setări → Cookie-uri și permisiuni de site</li>
+    </ul>
+    <div class="info-box">
+      <p>⚠️ Dezactivarea cookie-urilor esențiale poate afecta funcționalitatea site-ului (ex: coșul de cumpărături nu va funcționa corect).</p>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <h2><span>5.</span> Consimțământul dvs.</h2>
+    <p>La prima vizită pe site-ul nostru, vă solicităm acordul pentru utilizarea cookie-urilor prin intermediul unui banner de informare. Puteți modifica oricând preferințele dvs. prin setările browserului sau prin contactarea noastră.</p>
+  </div>
+
+  <div class="section-block">
+    <h2><span>6.</span> Contact</h2>
+    <p>Pentru orice întrebări legate de utilizarea cookie-urilor pe site-ul nostru, ne puteți contacta la:</p>
+    <ul>
+      <li><strong>Email:</strong> <a href="mailto:contact@wownanoceramic.ro">contact@wownanoceramic.ro</a></li>
+      <li><strong>Firmă:</strong> SC STAR WOW S.R.L., CIF 51554728</li>
+      <li><strong>Adresă:</strong> Str. Muzeului 79 mansardă, 247065, Bujoreni, Vâlcea</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer id="contact">
+  <div class="footer-top">
+    <div>
+      <a href="/" class="footer-logo">WOW NanoCeramic</a>
+      <p class="footer-desc">Tratamente ceramice profesionale pentru protecția și restaurarea plasticelor auto exterioare. Produs în Uniunea Europeană.</p>
+      <div class="footer-company-info">
+        <p><strong>SC STAR WOW S.R.L.</strong></p>
+        <p><span>Nr. Reg. Com.:</span> J2025023173009</p>
+        <p><span>C.I.F.:</span> 51554728</p>
+        <p><span>Cont:</span> RO27RNCB0263181757720001</p>
+        <p><span>Bancă:</span> BANCA COMERCIALA ROMANA S.A.</p>
+        <p><span>Sediu:</span> Str. Muzeului 79 mansardă, 247065, Bujoreni, Valcea</p>
+      </div>
+    </div>
+    <div>
+      <div class="footer-h">Suport Clienți</div>
+      <ul class="footer-links">
+        <li><a href="/#contact">Contact</a></li>
+        <li><a href="mailto:contact@wownanoceramic.ro">contact@wownanoceramic.ro</a></li>
+        <li><a href="#">L–V: 09:00–15:00</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-h">Linkuri Utile</div>
+      <ul class="footer-links">
+        <li><a href="/cookies.html">Politica de Cookie-uri</a></li>
+        <li><a href="/gdpr.html">Politica de Confidențialitate</a></li>
+        <li><a href="/termeni.html">Termeni și condiții</a></li>
+        <li><a href="/returnare.html">Politica de returnare</a></li>
+        <li><a href="https://anpc.ro" target="_blank">ANPC</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 SC STAR WOW S.R.L. · Toate drepturile rezervate · wownanoceramic.ro</div>
+    <div class="footer-socials">
+      <a href="#" class="soc">fb</a>
+      <a href="#" class="soc">ig</a>
+      <a href="#" class="soc">tt</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
