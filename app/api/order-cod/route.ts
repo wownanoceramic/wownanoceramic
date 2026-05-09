@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Adresă livrare</td>
                 <td style="padding:8px;border:1px solid #eee">${adresaLivrare}</td></tr>
           </table>
-          <p>Livrare estimată: <strong>2-4 zile lucrătoare</strong></p>
+          <p>Livrare estimată: <strong>1-2 zile lucrătoare</strong></p>
           <p>Pentru orice întrebări: <a href="mailto:contact@wownanoceramic.ro">contact@wownanoceramic.ro</a> sau 0771 181 151</p>
           <p style="color:#888;font-size:12px">SC STAR WOW S.R.L.</p>
         </div>

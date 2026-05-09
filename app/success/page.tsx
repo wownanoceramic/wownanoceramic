@@ -18,7 +18,7 @@ export default function SuccessPage() {
       </h1>
       <p style={{ color: '#ccc', fontSize: '18px', maxWidth: '500px' }}>
         Îți mulțumim! Vei primi un email de confirmare în câteva minute.
-        Comanda va fi livrată în 2-4 zile lucrătoare.
+        Comanda va fi livrată în 1-2 zile lucrătoare.
       </p>
       <a href="/" style={{
         marginTop: '32px',
