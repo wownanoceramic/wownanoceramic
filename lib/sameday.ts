@@ -5,8 +5,8 @@ export async function samedayAuth(): Promise<string> {
   const res = await fetch(`${SAMEDAY_API}/api/authenticate`, {
     method: 'POST',
     headers: {
-      'X-AUTH-USERNAME': process.env.SAMEDAY_USERNAME!,
-      'X-AUTH-PASSWORD': process.env.SAMEDAY_PASSWORD!,
+      'X-AUTH-USERNAME': process.env.SAMEDAY_API_USERNAME!,
+      'X-AUTH-PASSWORD': process.env.SAMEDAY_API_PASSWORD!,
     },
   });
 
@@ -16,7 +16,7 @@ export async function samedayAuth(): Promise<string> {
   }
 
   const data = await res.json();
-  return data.token; // "Bearer eyJ..."
+  return data.token;
 }
 
 // ─── Creare AWB ───────────────────────────────────────────────────────────────
@@ -42,7 +42,7 @@ export async function createAWB(params: AWBParams): Promise<{ awb: string }> {
     || Number(process.env.SAMEDAY_PICKUP_POINT)
     || 396691;
 
-  const weight = params.quantity * 0.2;
+  const weight = Math.max(params.quantity * 0.2, 0.5);
 
   const serviceId = params.deliveryType === 'easybox'
     ? Number(process.env.SAMEDAY_SERVICE_EASYBOX) || 39
@@ -80,20 +80,30 @@ export async function createAWB(params: AWBParams): Promise<{ awb: string }> {
     payload.locker = params.lockerId;
   }
 
-  const res = await fetch(`${SAMEDAY_API}/api/awb`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token,
-    },
-    body: JSON.stringify(payload),
-  });
+  // Incearca toate formatele de token pana gasim ce accepta Sameday
+  const tokenFormats = [token, `Bearer ${token}`, `Token ${token}`];
 
-  const data = await res.json();
+  for (const authHeader of tokenFormats) {
+    const res = await fetch(`${SAMEDAY_API}/api/awb`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: authHeader,
+      },
+      body: JSON.stringify(payload),
+    });
 
-  if (!res.ok || !data.awbNumber) {
-    throw new Error(`Sameday AWB error: ${JSON.stringify(data)}`);
+    const data = await res.json();
+
+    if (res.ok && data.awbNumber) {
+      return { awb: data.awbNumber };
+    }
+
+    // Daca e 401 incearca urmatorul format, altfel arunca eroare
+    if (res.status !== 401) {
+      throw new Error(`Sameday AWB error: ${JSON.stringify(data)}`);
+    }
   }
 
-  return { awb: data.awbNumber };
+  throw new Error('Sameday AWB: toate formatele de token au esuat');
 }
