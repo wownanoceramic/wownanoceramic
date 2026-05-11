@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createAWB } from '@/lib/sameday';
+import { createInvoice } from '@/lib/oblio';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -8,41 +9,31 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const {
-      nume, prenume, email, telefon, adresa, localitate, judet, tara,
-      numeSocietate, codFiscal, altaAdresa,
-      sNume, sPrenume, sAdresa, sLocalitate, sJudet, sTara,
-      quantity, price,
-      deliveryType,   // 'curier' | 'easybox'
-      lockerId,       // number | undefined (doar EasyBox)
-      lockerName,     // string | undefined (nume locker pentru email)
+      name, phone, email,
+      street, city, county,
+      quantity, cashOnDelivery,
+      deliveryType,
+      lockerId,
+      lockerName,
     } = body;
 
-    const numeComplet = `${nume} ${prenume}`;
-
-    // Adresa de livrare (pentru curier)
-    const livrareNume = altaAdresa ? `${sNume} ${sPrenume}` : numeComplet;
-    const livrareAdresa = altaAdresa ? sAdresa : adresa;
-    const livrareLocalitate = altaAdresa ? sLocalitate : localitate;
-    const livrareJudet = altaAdresa ? sJudet : judet;
-    const livrareTara = altaAdresa ? sTara : tara;
+    if (!name || !phone || !email || !quantity || !cashOnDelivery) {
+      return NextResponse.json({ error: 'Câmpuri lipsă.' }, { status: 400 });
+    }
 
     const adresaLivrareText = deliveryType === 'easybox'
       ? `EasyBox: ${lockerName || `Locker #${lockerId}`}`
-      : `${livrareAdresa}, ${livrareLocalitate}, ${livrareJudet}, ${livrareTara}`;
+      : `${street}, ${city}, ${county}`;
 
-    // ─── Generare AWB Sameday ─────────────────────────────────────────────────
+    // ── 1. AWB Sameday ────────────────────────────────────────────────────────
     let awbNumber = '';
     let awbError = '';
-
     try {
       const awbResult = await createAWB({
-        name: livrareNume,
-        phone: telefon,
-        email,
-        street: deliveryType === 'easybox' ? '' : livrareAdresa,
-        city: livrareLocalitate,
-        county: livrareJudet,
-        cashOnDelivery: parseFloat(price),
+        name, phone, email,
+        street: deliveryType === 'easybox' ? '' : street,
+        city, county,
+        cashOnDelivery: parseFloat(cashOnDelivery),
         quantity: parseInt(quantity),
         observation: `WOW NanoCeramic x${quantity} - Ramburs`,
         deliveryType: deliveryType || 'curier',
@@ -50,16 +41,33 @@ export async function POST(req: NextRequest) {
       });
       awbNumber = awbResult.awb;
     } catch (err: any) {
-      console.error('Sameday AWB error (ramburs):', err.message);
+      console.error('Sameday AWB error:', err.message);
       awbError = err.message;
-      // Nu oprim comanda dacă AWB-ul eșuează — trimitem emailul oricum
     }
 
-    // ─── Email către admin ────────────────────────────────────────────────────
+    // ── 2. Factură Oblio ──────────────────────────────────────────────────────
+    let invoice = null;
+    try {
+      const unitPrice = Number((parseFloat(cashOnDelivery) / parseInt(quantity)).toFixed(2));
+      invoice = await createInvoice({
+        name, email, phone,
+        address: street || '',
+        city: city || '',
+        county: county || '',
+        quantity: parseInt(quantity),
+        unitPrice,
+        totalAmount: parseFloat(cashOnDelivery),
+      });
+      console.log(`Factură Oblio: ${invoice.seriesName} ${invoice.number}`);
+    } catch (err: any) {
+      console.error('Oblio error:', err.message);
+    }
+
+    // ── 3. Email Admin ────────────────────────────────────────────────────────
     await resend.emails.send({
       from: 'comenzi@wownanoceramic.ro',
       to: 'contact@wownanoceramic.ro',
-      subject: `🛒 Comandă nouă ramburs - ${numeComplet} - ${price} RON${awbNumber ? ` | AWB: ${awbNumber}` : ''}`,
+      subject: `🛒 Comandă nouă ramburs - ${name} - ${cashOnDelivery} RON${awbNumber ? ` | AWB: ${awbNumber}` : ''}`,
       html: `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
           <h2 style="color:#C9A020">🛒 Comandă Nouă Ramburs</h2>
@@ -67,22 +75,24 @@ export async function POST(req: NextRequest) {
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Produs</td>
                 <td style="padding:8px;border:1px solid #eee">WOW NanoCeramic x${quantity}</td></tr>
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Total</td>
-                <td style="padding:8px;border:1px solid #eee;color:#C9A020;font-weight:bold">${price} RON</td></tr>
+                <td style="padding:8px;border:1px solid #eee;color:#C9A020;font-weight:bold">${cashOnDelivery} RON</td></tr>
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Nume</td>
-                <td style="padding:8px;border:1px solid #eee">${numeComplet}</td></tr>
+                <td style="padding:8px;border:1px solid #eee">${name}</td></tr>
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Email</td>
                 <td style="padding:8px;border:1px solid #eee">${email}</td></tr>
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Telefon</td>
-                <td style="padding:8px;border:1px solid #eee">${telefon}</td></tr>
+                <td style="padding:8px;border:1px solid #eee">${phone}</td></tr>
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Livrare</td>
                 <td style="padding:8px;border:1px solid #eee">${deliveryType === 'easybox' ? '📦 EasyBox' : '🚚 Curier la ușă'}</td></tr>
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Adresă livrare</td>
                 <td style="padding:8px;border:1px solid #eee">${adresaLivrareText}</td></tr>
-            ${numeSocietate ? `<tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Societate</td>
-                <td style="padding:8px;border:1px solid #eee">${numeSocietate} ${codFiscal ? `(${codFiscal})` : ''}</td></tr>` : ''}
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">AWB Sameday</td>
                 <td style="padding:8px;border:1px solid #eee;font-weight:bold;color:${awbNumber ? '#2e7d32' : '#c62828'}">
-                  ${awbNumber ? `✅ ${awbNumber}` : `❌ Eroare: ${awbError}`}
+                  ${awbNumber ? `✅ ${awbNumber}` : `❌ ${awbError || 'Indisponibil momentan'}`}
+                </td></tr>
+            <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Factură Oblio</td>
+                <td style="padding:8px;border:1px solid #eee;font-weight:bold;color:${invoice ? '#2e7d32' : '#c62828'}">
+                  ${invoice ? `✅ ${invoice.seriesName} ${invoice.number}` : '❌ Eroare emitere'}
                 </td></tr>
           </table>
           ${awbNumber ? `<p style="margin-top:16px"><a href="https://sameday.ro/track?awb=${awbNumber}" style="color:#C9A020">🔗 Tracking AWB</a></p>` : ''}
@@ -90,7 +100,7 @@ export async function POST(req: NextRequest) {
       `,
     });
 
-    // ─── Email confirmare client ───────────────────────────────────────────────
+    // ── 4. Email Client ───────────────────────────────────────────────────────
     await resend.emails.send({
       from: 'comenzi@wownanoceramic.ro',
       to: email,
@@ -98,13 +108,13 @@ export async function POST(req: NextRequest) {
       html: `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
           <h2 style="color:#C9A020">✅ Comanda ta a fost plasată!</h2>
-          <p>Bună ${nume},</p>
+          <p>Bună ${name},</p>
           <p>Îți mulțumim pentru comandă! Am primit comanda ta și o vom procesa în cel mai scurt timp.</p>
           <table style="width:100%;border-collapse:collapse;margin:20px 0">
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Produs</td>
                 <td style="padding:8px;border:1px solid #eee">WOW NanoCeramic x${quantity}</td></tr>
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Total de plătit</td>
-                <td style="padding:8px;border:1px solid #eee;color:#C9A020;font-weight:bold">${price} RON (ramburs)</td></tr>
+                <td style="padding:8px;border:1px solid #eee;color:#C9A020;font-weight:bold">${cashOnDelivery} RON (ramburs)</td></tr>
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Livrare</td>
                 <td style="padding:8px;border:1px solid #eee">${deliveryType === 'easybox' ? '📦 EasyBox' : '🚚 Curier la ușă'}</td></tr>
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Adresă livrare</td>
