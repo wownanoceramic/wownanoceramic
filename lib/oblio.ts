@@ -2,15 +2,17 @@ const OBLIO_API = 'https://www.oblio.eu/api';
 const CIF = '51554728';
 const SERIES = 'SW';
 
-// ─── OAuth 2.0 Token ──────────────────────────────────────────────────────────
+// ─── OAuth 2.0 Token (x-www-form-urlencoded) ─────────────────────────────────
 async function getOblioToken(): Promise<string> {
-  const res = await fetch(`${OBLIO_API}/authorize`, {
+  const params = new URLSearchParams({
+    client_id: process.env.OBLIO_EMAIL!,
+    client_secret: process.env.OBLIO_SECRET!,
+  });
+
+  const res = await fetch(`${OBLIO_API}/authorize/token`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      client_id: process.env.OBLIO_EMAIL,
-      client_secret: process.env.OBLIO_SECRET,
-    }),
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString(),
   });
 
   if (!res.ok) {
@@ -19,24 +21,26 @@ async function getOblioToken(): Promise<string> {
   }
 
   const data = await res.json();
+
+  if (!data.access_token) {
+    throw new Error(`Oblio: token lipsa in raspuns: ${JSON.stringify(data)}`);
+  }
+
   return data.access_token;
 }
 
 // ─── Creare Factură Fiscală ───────────────────────────────────────────────────
 export interface InvoiceParams {
-  // Client
   name: string;
   email: string;
   phone: string;
   address: string;
   city: string;
   county: string;
-
-  // Comandă
   quantity: number;
-  unitPrice: number;       // pretul per unitate CU TVA inclus
-  totalAmount: number;     // total comanda CU TVA inclus
-  issueDate?: string;      // YYYY-MM-DD, default: azi
+  unitPrice: number;
+  totalAmount: number;
+  issueDate?: string;
 }
 
 export async function createInvoice(params: InvoiceParams): Promise<{
@@ -57,7 +61,6 @@ export async function createInvoice(params: InvoiceParams): Promise<{
       state: params.county,
       email: params.email,
       phone: params.phone,
-      // CIF gol = persoana fizica (fara datele firmei)
       cif: '',
       vatPayer: false,
     },
@@ -76,7 +79,7 @@ export async function createInvoice(params: InvoiceParams): Promise<{
         measuringUnit: 'buc',
         vatName: 'Normala',
         vatPercentage: 21,
-        vatIncluded: 1,       // pretul include TVA
+        vatIncluded: 1,
         quantity: params.quantity,
         productType: 'Marfa',
       },
