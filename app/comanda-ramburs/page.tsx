@@ -1,6 +1,12 @@
 'use client';
-import { useState, Suspense, useEffect } from 'react';
+import { useState, Suspense, useEffect, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+
+declare global {
+  interface Window {
+    LockerPlugin: any;
+  }
+}
 
 const JUDETE = [
   'Alba','Arad','Argeș','Bacău','Bihor','Bistrița-Năsăud','Botoșani','Brăila',
@@ -44,64 +50,78 @@ function FormField({ label, required, children, error }: any) {
   );
 }
 
-function JudetSelect({ value, onChange, error }: any) {
+function JudetSelect({ value, onChange }: any) {
   return (
     <select value={value} onChange={e => onChange(e.target.value)}
-      style={{...inputStyle, appearance: 'none' as const, backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 12 12\'%3E%3Cpath fill=\'%23888\' d=\'M6 8L1 3h10z\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center'}}>
+      style={{...inputStyle, appearance: 'none' as const,
+        backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 12 12\'%3E%3Cpath fill=\'%23888\' d=\'M6 8L1 3h10z\'/%3E%3C/svg%3E")',
+        backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center'}}>
       <option value="">Selectează o opțiune...</option>
       {JUDETE.map(j => <option key={j} value={j}>{j}</option>)}
     </select>
   );
 }
 
-// ─── EasyBox Locker Selector ──────────────────────────────────────────────────
-function EasyboxSelector({ county, value, onChange }: {
-  county: string;
-  value: { id: number; name: string } | null;
-  onChange: (locker: { id: number; name: string } | null) => void;
-}) {
-  const [lockers, setLockers] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+// ─── EasyBox Widget (Sameday Locker Plugin oficial) ───────────────────────────
+function EasyboxWidget({ onSelect }: { onSelect: (locker: { id: number; name: string; address: string; city: string }) => void }) {
+  const pluginReady = useRef(false);
 
   useEffect(() => {
-    if (!county) { setLockers([]); return; }
-    setLoading(true);
-    fetch(`/api/sameday-lockers?county=${encodeURIComponent(county)}`)
-      .then(r => r.json())
-      .then(data => { setLockers(data.lockers || []); setLoading(false); })
-      .catch(() => { setLockers([]); setLoading(false); });
-  }, [county]);
+    // Încarcă SDK-ul oficial Sameday
+    if (document.getElementById('sameday-locker-sdk')) {
+      initPlugin();
+      return;
+    }
+    const script = document.createElement('script');
+    script.id = 'sameday-locker-sdk';
+    script.src = 'https://cdn.sameday.ro/locker-plugin/lockerpluginsdk.js';
+    script.onload = () => initPlugin();
+    document.body.appendChild(script);
+  }, []);
 
-  if (!county) {
-    return <p style={{color:'#888', fontSize:'12px', marginTop:'8px'}}>Selectează mai întâi județul pentru a vedea lockerele disponibile.</p>;
+  function initPlugin() {
+    if (pluginReady.current) return;
+    pluginReady.current = true;
+
+    window.LockerPlugin.init({
+      apiUsername: process.env.NEXT_PUBLIC_SAMEDAY_USERNAME || '',
+      countryCode: 'RO',
+      langCode: 'ro',
+    });
+
+    const instance = window.LockerPlugin.getInstance();
+    instance.subscribe((msg: any) => {
+      if (msg && msg.lockerId) {
+        onSelect({
+          id: msg.lockerId,
+          name: msg.name || '',
+          address: msg.address || '',
+          city: msg.city || '',
+        });
+      }
+    });
   }
 
-  if (loading) {
-    return <p style={{color:'#888', fontSize:'12px', marginTop:'8px'}}>Se încarcă lockerele...</p>;
-  }
-
-  if (lockers.length === 0) {
-    return <p style={{color:'#e53935', fontSize:'12px', marginTop:'8px'}}>Nu există lockere EasyBox disponibile în {county}. Te rugăm să alegi livrare curier.</p>;
+  function openWidget() {
+    if (window.LockerPlugin) {
+      window.LockerPlugin.getInstance().open();
+    }
   }
 
   return (
-    <FormField label="Locker EasyBox" required>
-      <select
-        value={value?.id || ''}
-        onChange={e => {
-          const locker = lockers.find((l: any) => l.id === parseInt(e.target.value));
-          onChange(locker ? { id: locker.id, name: locker.name || locker.address } : null);
-        }}
-        style={{...inputStyle, appearance: 'none' as const}}
-      >
-        <option value="">Selectează locker...</option>
-        {lockers.map((l: any) => (
-          <option key={l.id} value={l.id}>
-            {l.name || l.address} — {l.city}
-          </option>
-        ))}
-      </select>
-    </FormField>
+    <button
+      type="button"
+      onClick={openWidget}
+      style={{
+        width: '100%', padding: '12px 14px',
+        background: '#1a1a1a', border: '1px solid #C9A020',
+        color: '#C9A020', borderRadius: '6px', fontSize: '13px',
+        fontFamily: 'Montserrat,sans-serif', cursor: 'pointer',
+        fontWeight: '600', textAlign: 'left' as const,
+      }}
+    >
+      📦 Alege locker EasyBox de pe hartă
+    </button>
   );
 }
 
@@ -114,7 +134,7 @@ function ComandaForm() {
   const [altaAdresa, setAltaAdresa] = useState(false);
   const [errors, setErrors] = useState<any>({});
   const [deliveryType, setDeliveryType] = useState<'curier' | 'easybox'>('curier');
-  const [selectedLocker, setSelectedLocker] = useState<{ id: number; name: string } | null>(null);
+  const [selectedLocker, setSelectedLocker] = useState<{ id: number; name: string; address: string; city: string } | null>(null);
 
   const [form, setForm] = useState({
     nume: '', prenume: '', adresa: '', email: '', telefon: '',
@@ -124,26 +144,17 @@ function ComandaForm() {
 
   const set = (field: string) => (e: any) => setForm(f => ({...f, [field]: e.target.value}));
 
-  const activeJudet = altaAdresa ? form.sJudet : form.judet;
-
   function validate() {
     const req = ['nume','prenume','email','telefon','localitate','judet'];
-    // Adresa stradă necesară doar pentru curier
     if (deliveryType === 'curier') req.push('adresa');
-
     const sReq = altaAdresa
       ? (deliveryType === 'curier'
           ? ['sNume','sPrenume','sAdresa','sLocalitate','sJudet']
           : ['sNume','sPrenume','sLocalitate','sJudet'])
       : [];
-
     const errs: any = {};
-    [...req, ...sReq].forEach(k => {
-      if (!form[k as keyof typeof form].trim()) errs[k] = true;
-    });
-
+    [...req, ...sReq].forEach(k => { if (!form[k as keyof typeof form].trim()) errs[k] = true; });
     if (deliveryType === 'easybox' && !selectedLocker) errs.locker = true;
-
     setErrors(errs);
     return Object.keys(errs).length === 0;
   }
@@ -162,7 +173,7 @@ function ComandaForm() {
           altaAdresa,
           deliveryType,
           lockerId: selectedLocker?.id,
-          lockerName: selectedLocker?.name,
+          lockerName: selectedLocker ? `${selectedLocker.name} - ${selectedLocker.address}, ${selectedLocker.city}` : '',
         }),
       });
       const data = await res.json();
@@ -179,52 +190,39 @@ function ComandaForm() {
         <span style={{color:'#C9A020', fontWeight:'700', fontSize:'16px'}}>{price} RON</span>
       </div>
 
-      {/* ─── Tipul de livrare ─────────────────────────────────────────────────── */}
-      <div style={{...sectionTitle}}>Metoda de Livrare</div>
+      {/* ─── Metoda de livrare ─────────────────────────────────────────────── */}
+      <div style={sectionTitle}>Metoda de Livrare</div>
       <div style={{display:'flex', gap:'12px', marginBottom:'28px'}}>
-        {/* Curier */}
-        <button
-          type="button"
-          onClick={() => setDeliveryType('curier')}
-          style={{
-            flex: 1, padding: '14px', borderRadius: '8px', cursor: 'pointer',
-            fontFamily: 'Montserrat,sans-serif', fontSize: '13px', fontWeight: '700',
-            border: deliveryType === 'curier' ? '2px solid #C9A020' : '2px solid #333',
-            background: deliveryType === 'curier' ? 'rgba(201,160,32,0.1)' : '#1a1a1a',
-            color: deliveryType === 'curier' ? '#C9A020' : '#aaa',
-            transition: 'all 0.2s',
-          }}
-        >
+        <button type="button" onClick={() => { setDeliveryType('curier'); setSelectedLocker(null); }}
+          style={{flex:1, padding:'14px', borderRadius:'8px', cursor:'pointer',
+            fontFamily:'Montserrat,sans-serif', fontSize:'13px', fontWeight:'700',
+            border: deliveryType==='curier' ? '2px solid #C9A020' : '2px solid #333',
+            background: deliveryType==='curier' ? 'rgba(201,160,32,0.1)' : '#1a1a1a',
+            color: deliveryType==='curier' ? '#C9A020' : '#aaa', transition:'all 0.2s'}}>
           🚚 Curier la ușă
-          <div style={{fontSize:'11px', fontWeight:'400', marginTop:'4px', color: deliveryType === 'curier' ? '#C9A020' : '#666'}}>
+          <div style={{fontSize:'11px', fontWeight:'400', marginTop:'4px',
+            color: deliveryType==='curier' ? '#C9A020' : '#666'}}>
             NextDay — 1-2 zile
           </div>
         </button>
-
-        {/* EasyBox */}
-        <button
-          type="button"
-          onClick={() => setDeliveryType('easybox')}
-          style={{
-            flex: 1, padding: '14px', borderRadius: '8px', cursor: 'pointer',
-            fontFamily: 'Montserrat,sans-serif', fontSize: '13px', fontWeight: '700',
-            border: deliveryType === 'easybox' ? '2px solid #C9A020' : '2px solid #333',
-            background: deliveryType === 'easybox' ? 'rgba(201,160,32,0.1)' : '#1a1a1a',
-            color: deliveryType === 'easybox' ? '#C9A020' : '#aaa',
-            transition: 'all 0.2s',
-          }}
-        >
+        <button type="button" onClick={() => setDeliveryType('easybox')}
+          style={{flex:1, padding:'14px', borderRadius:'8px', cursor:'pointer',
+            fontFamily:'Montserrat,sans-serif', fontSize:'13px', fontWeight:'700',
+            border: deliveryType==='easybox' ? '2px solid #C9A020' : '2px solid #333',
+            background: deliveryType==='easybox' ? 'rgba(201,160,32,0.1)' : '#1a1a1a',
+            color: deliveryType==='easybox' ? '#C9A020' : '#aaa', transition:'all 0.2s'}}>
           📦 EasyBox
-          <div style={{fontSize:'11px', fontWeight:'400', marginTop:'4px', color: deliveryType === 'easybox' ? '#C9A020' : '#666'}}>
+          <div style={{fontSize:'11px', fontWeight:'400', marginTop:'4px',
+            color: deliveryType==='easybox' ? '#C9A020' : '#666'}}>
             Ridici când vrei
           </div>
         </button>
       </div>
 
-      {/* ─── Detalii Facturare ────────────────────────────────────────────────── */}
+      {/* ─── Detalii ──────────────────────────────────────────────────────── */}
       <div style={sectionTitle}>Detalii Facturare și Livrare</div>
-
       <div style={{display:'flex', flexDirection:'column', gap:'14px'}}>
+
         <div style={rowStyle}>
           <FormField label="Nume" required error={errors.nume}>
             <input style={inputStyle} placeholder="Nume" value={form.nume} onChange={set('nume')}/>
@@ -254,27 +252,30 @@ function ComandaForm() {
             <input style={inputStyle} placeholder="Municipiu/Oraș/Localitate" value={form.localitate} onChange={set('localitate')}/>
           </FormField>
           <FormField label="Județ" required error={errors.judet}>
-            <JudetSelect value={form.judet} onChange={(v:string) => setForm(f=>({...f,judet:v}))} error={errors.judet}/>
+            <JudetSelect value={form.judet} onChange={(v:string) => setForm(f=>({...f,judet:v}))}/>
           </FormField>
         </div>
 
-        {/* EasyBox locker selector */}
+        {/* EasyBox selector */}
         {deliveryType === 'easybox' && !altaAdresa && (
           <div>
-            <EasyboxSelector
-              county={form.judet}
-              value={selectedLocker}
-              onChange={setSelectedLocker}
-            />
+            <label style={labelStyle}>Locker EasyBox <span style={{color:'#C9A020'}}>*</span></label>
+            <EasyboxWidget onSelect={setSelectedLocker}/>
+            {selectedLocker && (
+              <div style={{marginTop:'8px', padding:'10px 12px', background:'rgba(201,160,32,0.08)',
+                border:'1px solid rgba(201,160,32,0.3)', borderRadius:'6px', fontSize:'12px', color:'#C9A020'}}>
+                ✅ {selectedLocker.name} — {selectedLocker.address}, {selectedLocker.city}
+              </div>
+            )}
             {errors.locker && <div style={errorStyle}>Selectează un locker EasyBox.</div>}
           </div>
         )}
 
         <div style={rowStyle}>
           <FormField label="Nume Societate (opțional)">
-            <input style={inputStyle} placeholder="SRL, PFA, etc. - opțional" value={form.numeSocietate} onChange={set('numeSocietate')}/>
+            <input style={inputStyle} placeholder="SRL, PFA, etc." value={form.numeSocietate} onChange={set('numeSocietate')}/>
           </FormField>
-          <FormField label="Cod Fiscal Societate (opțional)">
+          <FormField label="Cod Fiscal (opțional)">
             <input style={inputStyle} placeholder="CUI - opțional" value={form.codFiscal} onChange={set('codFiscal')}/>
           </FormField>
         </div>
@@ -285,16 +286,15 @@ function ComandaForm() {
           </select>
         </FormField>
 
-        {/* Checkbox alta adresa */}
         <label style={{display:'flex', alignItems:'center', gap:'10px', cursor:'pointer', marginTop:'4px'}}>
           <input type="checkbox" checked={altaAdresa} onChange={e => setAltaAdresa(e.target.checked)}
             style={{width:'16px', height:'16px', cursor:'pointer', accentColor:'#C9A020'}}/>
           <span style={{color:'#fff', fontSize:'13px', fontWeight:'600'}}>Livrezi la o altă adresă?</span>
         </label>
 
-        {/* Adresa alternativa */}
         {altaAdresa && (
-          <div style={{borderTop:'1px solid rgba(201,160,32,0.2)', paddingTop:'20px', display:'flex', flexDirection:'column', gap:'14px', marginTop:'8px'}}>
+          <div style={{borderTop:'1px solid rgba(201,160,32,0.2)', paddingTop:'20px',
+            display:'flex', flexDirection:'column', gap:'14px', marginTop:'8px'}}>
             <div style={sectionTitle}>Adresă de Livrare</div>
             <div style={rowStyle}>
               <FormField label="Nume" required error={errors.sNume}>
@@ -304,34 +304,32 @@ function ComandaForm() {
                 <input style={inputStyle} placeholder="Prenume" value={form.sPrenume} onChange={set('sPrenume')}/>
               </FormField>
             </div>
-
             {deliveryType === 'curier' && (
               <FormField label="Adresă" required error={errors.sAdresa}>
-                <input style={inputStyle} placeholder="Nume stradă, număr, apartament, etc." value={form.sAdresa} onChange={set('sAdresa')}/>
+                <input style={inputStyle} placeholder="Stradă, număr, apartament..." value={form.sAdresa} onChange={set('sAdresa')}/>
               </FormField>
             )}
-
             <div style={rowStyle}>
               <FormField label="Localitate" required error={errors.sLocalitate}>
-                <input style={inputStyle} placeholder="Municipiu/Oraș/Localitate" value={form.sLocalitate} onChange={set('sLocalitate')}/>
+                <input style={inputStyle} placeholder="Localitate" value={form.sLocalitate} onChange={set('sLocalitate')}/>
               </FormField>
               <FormField label="Județ" required error={errors.sJudet}>
-                <JudetSelect value={form.sJudet} onChange={(v:string) => setForm(f=>({...f,sJudet:v}))} error={errors.sJudet}/>
+                <JudetSelect value={form.sJudet} onChange={(v:string) => setForm(f=>({...f,sJudet:v}))}/>
               </FormField>
             </div>
-
-            {/* EasyBox locker pentru adresa alternativa */}
             {deliveryType === 'easybox' && (
               <div>
-                <EasyboxSelector
-                  county={form.sJudet}
-                  value={selectedLocker}
-                  onChange={setSelectedLocker}
-                />
+                <label style={labelStyle}>Locker EasyBox <span style={{color:'#C9A020'}}>*</span></label>
+                <EasyboxWidget onSelect={setSelectedLocker}/>
+                {selectedLocker && (
+                  <div style={{marginTop:'8px', padding:'10px 12px', background:'rgba(201,160,32,0.08)',
+                    border:'1px solid rgba(201,160,32,0.3)', borderRadius:'6px', fontSize:'12px', color:'#C9A020'}}>
+                    ✅ {selectedLocker.name} — {selectedLocker.address}, {selectedLocker.city}
+                  </div>
+                )}
                 {errors.locker && <div style={errorStyle}>Selectează un locker EasyBox.</div>}
               </div>
             )}
-
             <FormField label="Țară/regiune" required>
               <select style={{...inputStyle}} value={form.sTara} onChange={set('sTara')}>
                 <option>România</option>
@@ -341,7 +339,8 @@ function ComandaForm() {
         )}
 
         <button onClick={handleSubmit} disabled={loading} style={{
-          width:'100%', padding:'16px', background:'linear-gradient(135deg,#F0C040 0%,#B8860B 40%,#F5D060 60%,#8B6508 100%)',
+          width:'100%', padding:'16px',
+          background:'linear-gradient(135deg,#F0C040 0%,#B8860B 40%,#F5D060 60%,#8B6508 100%)',
           color:'#000', border:'none', borderRadius:'6px', fontWeight:'800',
           fontSize:'13px', letterSpacing:'2px', textTransform:'uppercase' as const,
           cursor: loading ? 'not-allowed' : 'pointer', fontFamily:'Montserrat,sans-serif',
@@ -356,11 +355,9 @@ function ComandaForm() {
 
 export default function ComandaRamburs() {
   return (
-    <div style={{
-      minHeight:'100vh', background:'#0a0a0a', display:'flex', flexDirection:'column',
+    <div style={{minHeight:'100vh', background:'#0a0a0a', display:'flex', flexDirection:'column',
       alignItems:'center', justifyContent:'flex-start', color:'#fff',
-      fontFamily:'Montserrat,sans-serif', padding:'60px 20px'
-    }}>
+      fontFamily:'Montserrat,sans-serif', padding:'60px 20px'}}>
       <h1 style={{color:'#C9A020', fontSize:'24px', fontWeight:'800', letterSpacing:'3px',
         textTransform:'uppercase', marginBottom:'32px'}}>
         Comandă Ramburs
