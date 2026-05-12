@@ -1,0 +1,23 @@
+﻿<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@graph": [
+    {
+      "@type": "Product",
+      "name": "WOW NanoCeramic Restore & Protect",
+      "image": "https://wownanoceramic.ro/main-product.jpg", 
+      "description": "Tratament nanoceramic profesional pentru restaurarea si protectia plasticelor exterioare auto. Efect hidrofob si protectie UV peste 2 ani.",
+      "brand": { "@type": "Brand", "name": "WOW NanoCeramic" },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://wownanoceramic.ro",
+        "priceCurrency": "RON",
+        "price": "99.00",
+        "availability": "https://schema.org/InStock",
+        "itemCondition": "https://schema.org/NewCondition"
+      },
+      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "127" }
+    }
+  ]
+}
+</script>
