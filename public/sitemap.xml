@@ -1,45 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
   <url>
-    <loc>https://www.wownanoceramic.ro/</loc>
-    <lastmod>2025-05-05</lastmod>
+    <loc>https://wownanoceramic.ro/</loc>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+
   <url>
-    <loc>https://www.wownanoceramic.ro/despre.html</loc>
-    <lastmod>2025-05-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.wownanoceramic.ro/transport.html</loc>
-    <lastmod>2025-05-05</lastmod>
+    <loc>https://wownanoceramic.ro/despre</loc>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+
   <url>
-    <loc>https://www.wownanoceramic.ro/returnare.html</loc>
-    <lastmod>2025-05-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.wownanoceramic.ro/termeni.html</loc>
-    <lastmod>2025-05-05</lastmod>
+    <loc>https://wownanoceramic.ro/transport</loc>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+
   <url>
-    <loc>https://www.wownanoceramic.ro/gdpr.html</loc>
-    <lastmod>2025-05-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.wownanoceramic.ro/cookies.html</loc>
-    <lastmod>2025-05-05</lastmod>
+    <loc>https://wownanoceramic.ro/returnare</loc>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
+
+  <url>
+    <loc>https://wownanoceramic.ro/termeni</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://wownanoceramic.ro/gdpr</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>https://wownanoceramic.ro/cookies</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
 </urlset>

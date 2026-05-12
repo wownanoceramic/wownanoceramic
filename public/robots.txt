@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Disallow: /api/
+Disallow: /comanda-ramburs
+Disallow: /succes
+Disallow: /eroare
+
+Sitemap: https://wownanoceramic.ro/sitemap.xml
