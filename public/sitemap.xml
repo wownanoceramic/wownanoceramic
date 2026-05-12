@@ -1,53 +1,50 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <url>
-    <loc>https://wownanoceramic.ro/</loc>
-    <lastmod>2026-05-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-
-  <url>
-    <loc>https://wownanoceramic.ro/despre</loc>
-    <lastmod>2026-05-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://wownanoceramic.ro/transport</loc>
-    <lastmod>2026-05-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <url>
-    <loc>https://wownanoceramic.ro/returnare</loc>
-    <lastmod>2026-05-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-
-  <url>
-    <loc>https://wownanoceramic.ro/termeni</loc>
-    <lastmod>2026-05-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
-  </url>
-
-  <url>
-    <loc>https://wownanoceramic.ro/gdpr</loc>
-    <lastmod>2026-05-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
-  </url>
-
-  <url>
-    <loc>https://wownanoceramic.ro/cookies</loc>
-    <lastmod>2026-05-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
+﻿<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://wownanoceramic.ro/cookies</loc><priority>0.3</priority></url>
+  <url><loc>https://wownanoceramic.ro/despre</loc><priority>0.3</priority></url>
+  <url><loc>https://wownanoceramic.ro/gdpr</loc><priority>0.3</priority></url>
+  <url><loc>https://wownanoceramic.ro/</loc><priority>1.0</priority></url>
+  <url><loc>https://wownanoceramic.ro/returnare</loc><priority>0.3</priority></url>
+  <url><loc>https://wownanoceramic.ro/termeni</loc><priority>0.3</priority></url>
+  <url><loc>https://wownanoceramic.ro/transport</loc><priority>0.3</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-alba-iulia</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-alexandria</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-arad</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-bacau</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-baia-mare</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-bistrita</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-botosani</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-braila</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-brasov</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-bucuresti</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-buzau</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-calarasi</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-cluj-napoca</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-constanta</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-craiova</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-deva</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-drobeta-turnu-severin</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-focsani</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-galati</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-giurgiu</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-iasi</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-miercurea-ciuc</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-oradea</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-piatra-neamt</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-pitesti</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-ploiesti</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-ramnicu-valcea</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-resita</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-satu-mare</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-sfantu-gheorghe</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-sibiu</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-slatina</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-slobozia</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-suceava</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-targoviste</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-targu-jiu</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-targu-mures</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-timisoara</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-tulcea</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-vaslui</loc><priority>0.8</priority></url>
+  <url><loc>https://wownanoceramic.ro/tratament-ceramic-auto-zalau</loc><priority>0.8</priority></url>
 </urlset>
