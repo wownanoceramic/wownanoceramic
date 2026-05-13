@@ -1,9 +1,7 @@
 const OBLIO_API = 'https://www.oblio.eu/api';
 const CIF = '51554728';
 const SERIES = 'SW';
-
-// ── Numele gestiunii din Oblio → Setări → Gestiuni (lasă '' dacă nu știi exact) ──
-const GESTIUNE = '';
+const GESTIUNE = 'EMAG';
 
 // ─── OAuth 2.0 Token (x-www-form-urlencoded) ─────────────────────────────────
 async function getOblioToken(): Promise<string> {
@@ -49,22 +47,6 @@ export async function createInvoice(params: InvoiceParams): Promise<{
   const token = await getOblioToken();
   const today = new Date().toISOString().split('T')[0];
 
-  const product: Record<string, any> = {
-    name: 'WOW NanoCeramic - Soluție Protecție Ceramică',
-    code: 'WNC-001',
-    price: params.unitPrice,
-    measuringUnit: 'buc',
-    vatName: 'Normala',
-    vatPercentage: 21,
-    vatIncluded: 1,
-    quantity: params.quantity,
-    productType: 'Marfa',
-  };
-
-  if (GESTIUNE) {
-    product.management = GESTIUNE;
-  }
-
   const payload = {
     cif: CIF,
     client: {
@@ -85,7 +67,20 @@ export async function createInvoice(params: InvoiceParams): Promise<{
     precision: 2,
     currency: 'RON',
     useStock: 1,
-    products: [product],
+    products: [
+      {
+        name: 'Kit Complet WOW NanoCeramic',
+        code: 'CS-IT-252',
+        management: GESTIUNE,
+        price: params.unitPrice,
+        measuringUnit: 'buc',
+        vatName: 'Normala',
+        vatPercentage: 21,
+        vatIncluded: 1,
+        quantity: params.quantity,
+        productType: 'Produs Finit',
+      },
+    ],
   };
 
   console.log('[Oblio] payload:', JSON.stringify(payload));
