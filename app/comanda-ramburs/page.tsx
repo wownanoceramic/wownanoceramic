@@ -12,6 +12,9 @@ const JUDETE = [
   'Vâlcea','Vaslui','Vrancea',
 ];
 
+const TRANSPORT_CURIER = 21.99;
+const TRANSPORT_EASYBOX = 16.99;
+
 // ─── EasyBox Widget (SDK oficial Sameday) ─────────────────────────────────────
 function EasyboxWidget({ onSelect }: {
   onSelect: (locker: { id: number; name: string; address: string; city: string }) => void;
@@ -25,8 +28,8 @@ function EasyboxWidget({ onSelect }: {
       initialized.current = true;
       try {
         (window as any).LockerPlugin.init({
-          clientId: 'a1123899-1c58-4162-bf71-e2d2a320722b', // ← clientId oficial whitelistat
-          apiUsername: 'starwowAPI',                         // ← LM username Sameday
+          clientId: 'a1123899-1c58-4162-bf71-e2d2a320722b',
+          apiUsername: 'starwowAPI',
           countryCode: 'RO',
           langCode: 'ro',
           theme: 'dark',
@@ -34,7 +37,6 @@ function EasyboxWidget({ onSelect }: {
 
         const instance = (window as any).LockerPlugin.getInstance();
 
-        // Callback când utilizatorul selectează un locker
         instance.subscribe((msg: any) => {
           if (msg?.lockerId) {
             onSelect({
@@ -43,27 +45,18 @@ function EasyboxWidget({ onSelect }: {
               address: msg.address || '',
               city: msg.city || '',
             });
-            instance.close(); // Închide harta după selecție
+            instance.close();
           }
         });
 
-        // Callback când plugin-ul e închis (fără selecție sau după)
-        instance.subscribeToPluginClosed(() => {
-          // Poți adăuga logică suplimentară aici dacă e nevoie
-        });
-
+        instance.subscribeToPluginClosed(() => {});
         setSdkReady(true);
       } catch (e) {
         console.error('LockerPlugin init error:', e);
       }
     }
 
-    if ((window as any).LockerPlugin) {
-      initPlugin();
-      return;
-    }
-
-    // Evită încărcarea duplicată a scriptului
+    if ((window as any).LockerPlugin) { initPlugin(); return; }
     if (document.getElementById('sameday-sdk')) return;
 
     const script = document.createElement('script');
@@ -80,35 +73,19 @@ function EasyboxWidget({ onSelect }: {
     if (plugin && sdkReady) {
       plugin.getInstance().open();
     } else if (plugin && !sdkReady) {
-      // SDK încărcat dar init nu e gata — reîncercăm
-      setTimeout(() => {
-        if ((window as any).LockerPlugin) {
-          (window as any).LockerPlugin.getInstance().open();
-        }
-      }, 500);
+      setTimeout(() => { if ((window as any).LockerPlugin) (window as any).LockerPlugin.getInstance().open(); }, 500);
     } else {
       alert('Harta EasyBox se încarcă. Încearcă din nou în câteva secunde.');
     }
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleOpen}
-      style={{
-        width: '100%',
-        padding: '12px',
-        background: '#1a1a1a',
-        border: '1px solid #C9A020',
-        color: '#C9A020',
-        borderRadius: '8px',
-        cursor: 'pointer',
-        fontFamily: 'Montserrat, sans-serif',
-        fontSize: '14px',
-        fontWeight: '600',
-        marginTop: '8px',
-      }}
-    >
+    <button type="button" onClick={handleOpen} style={{
+      width: '100%', padding: '12px', background: '#1a1a1a',
+      border: '1px solid #C9A020', color: '#C9A020', borderRadius: '8px',
+      cursor: 'pointer', fontFamily: 'Montserrat, sans-serif',
+      fontSize: '14px', fontWeight: '600', marginTop: '8px',
+    }}>
       📍 {sdkReady ? 'Deschide harta EasyBox' : 'Se încarcă harta...'}
     </button>
   );
@@ -117,17 +94,13 @@ function EasyboxWidget({ onSelect }: {
 // ─── Select județ ─────────────────────────────────────────────────────────────
 function JudetSelect({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   return (
-    <select
-      value={value}
-      onChange={e => onChange(e.target.value)}
-      style={{
-        width: '100%', padding: '12px 14px', background: '#1a1a1a',
-        border: '1px solid #333', borderRadius: '8px', color: value ? '#fff' : '#888',
-        fontSize: '14px', cursor: 'pointer', appearance: 'none',
-        backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 12 12\'%3E%3Cpath fill=\'%23888\' d=\'M6 8L1 3h10z\'/%3E%3C/svg%3E")',
-        backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center',
-      }}
-    >
+    <select value={value} onChange={e => onChange(e.target.value)} style={{
+      width: '100%', padding: '12px 14px', background: '#1a1a1a',
+      border: '1px solid #333', borderRadius: '8px', color: value ? '#fff' : '#888',
+      fontSize: '14px', cursor: 'pointer', appearance: 'none',
+      backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 12 12\'%3E%3Cpath fill=\'%23888\' d=\'M6 8L1 3h10z\'/%3E%3C/svg%3E")',
+      backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center',
+    }}>
       <option value="">Selectează județul...</option>
       {JUDETE.map(j => <option key={j} value={j}>{j}</option>)}
     </select>
@@ -136,14 +109,10 @@ function JudetSelect({ value, onChange }: { value: string; onChange: (v: string)
 
 // ─── Input stilizat ───────────────────────────────────────────────────────────
 function Input({ placeholder, value, onChange, type = 'text' }: {
-  placeholder: string; value: string;
-  onChange: (v: string) => void; type?: string;
+  placeholder: string; value: string; onChange: (v: string) => void; type?: string;
 }) {
   return (
-    <input
-      type={type}
-      placeholder={placeholder}
-      value={value}
+    <input type={type} placeholder={placeholder} value={value}
       onChange={e => onChange(e.target.value)}
       style={{
         width: '100%', padding: '12px 14px', background: '#1a1a1a',
@@ -158,22 +127,29 @@ function Input({ placeholder, value, onChange, type = 'text' }: {
 // ─── Formular principal ───────────────────────────────────────────────────────
 function ComandaForm() {
   const params = useSearchParams();
-  const qty = Number(params.get('qty') || 1);
+  const qty   = Number(params.get('qty')   || 1);
   const price = Number(params.get('price') || 0);
 
   const [deliveryType, setDeliveryType] = useState<'curier' | 'easybox'>('curier');
   const [locker, setLocker] = useState<{ id: number; name: string; address: string; city: string } | null>(null);
 
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
+  const [name,   setName]   = useState('');
+  const [phone,  setPhone]  = useState('');
+  const [email,  setEmail]  = useState('');
   const [street, setStreet] = useState('');
-  const [city, setCity] = useState('');
+  const [city,   setCity]   = useState('');
   const [county, setCounty] = useState('');
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error,   setError]   = useState('');
   const [success, setSuccess] = useState('');
+
+  // Cost transport — doar pentru 1 produs
+  const transportCost = qty === 1
+    ? (deliveryType === 'easybox' ? TRANSPORT_EASYBOX : TRANSPORT_CURIER)
+    : 0;
+
+  const totalFinal = price + transportCost;
 
   async function handleSubmit() {
     setError('');
@@ -194,23 +170,25 @@ function ComandaForm() {
     setLoading(true);
     try {
       const body: any = {
-        name, phone, email, quantity: qty,
-        cashOnDelivery: price,
+        name, phone, email,
+        quantity: qty,
+        cashOnDelivery: totalFinal,  // ← include transportul pentru qty=1
         deliveryType,
       };
 
       if (deliveryType === 'curier') {
         body.street = street;
-        body.city = city;
+        body.city   = city;
         body.county = county;
       } else {
-        body.lockerId = locker!.id;
-        body.street = locker!.address;
-        body.city = locker!.city;
-        body.county = county || 'București';
+        body.lockerId    = locker!.id;
+        body.lockerName  = locker!.name;
+        body.street      = locker!.address;
+        body.city        = locker!.city;
+        body.county      = county || 'București';
       }
 
-      const res = await fetch('/api/order-cod', {
+      const res  = await fetch('/api/order-cod', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -231,9 +209,7 @@ function ComandaForm() {
     return (
       <div style={{ textAlign: 'center', padding: '40px 0' }}>
         <p style={{ color: '#C9A020', fontSize: '20px', fontWeight: '700' }}>{success}</p>
-        <p style={{ color: '#aaa', marginTop: '12px' }}>
-          Vei primi un email de confirmare în curând.
-        </p>
+        <p style={{ color: '#aaa', marginTop: '12px' }}>Vei primi un email de confirmare în curând.</p>
       </div>
     );
   }
@@ -244,9 +220,7 @@ function ComandaForm() {
       {/* Selector tip livrare */}
       <div style={{ display: 'flex', gap: '12px' }}>
         {(['curier', 'easybox'] as const).map(type => (
-          <button
-            key={type}
-            type="button"
+          <button key={type} type="button"
             onClick={() => { setDeliveryType(type); setLocker(null); }}
             style={{
               flex: 1, padding: '14px', borderRadius: '10px', cursor: 'pointer',
@@ -263,15 +237,15 @@ function ComandaForm() {
       </div>
 
       {/* Date personale */}
-      <Input placeholder="Nume complet *" value={name} onChange={setName} />
-      <Input placeholder="Telefon *" value={phone} onChange={setPhone} type="tel" />
-      <Input placeholder="Email *" value={email} onChange={setEmail} type="email" />
+      <Input placeholder="Nume complet *"          value={name}  onChange={setName} />
+      <Input placeholder="Telefon *"               value={phone} onChange={setPhone} type="tel" />
+      <Input placeholder="Email *"                 value={email} onChange={setEmail} type="email" />
 
       {/* Adresa curier */}
       {deliveryType === 'curier' && (
         <>
           <Input placeholder="Stradă, număr, apartament *" value={street} onChange={setStreet} />
-          <Input placeholder="Oraș *" value={city} onChange={setCity} />
+          <Input placeholder="Oraș *"                       value={city}   onChange={setCity} />
           <JudetSelect value={county} onChange={setCounty} />
         </>
       )}
@@ -289,58 +263,67 @@ function ComandaForm() {
               <p style={{ color: '#ccc', margin: '4px 0 0', fontSize: '13px' }}>
                 {locker.name} — {locker.address}, {locker.city}
               </p>
-              <button
-                type="button"
-                onClick={() => setLocker(null)}
-                style={{
-                  marginTop: '8px', background: 'none', border: 'none',
-                  color: '#888', cursor: 'pointer', fontSize: '12px', padding: 0,
-                }}
-              >
+              <button type="button" onClick={() => setLocker(null)} style={{
+                marginTop: '8px', background: 'none', border: 'none',
+                color: '#888', cursor: 'pointer', fontSize: '12px', padding: 0,
+              }}>
                 Schimbă lockerul
               </button>
             </div>
           )}
-          {/* Județ necesar pentru AWB chiar și la EasyBox */}
           <div style={{ marginTop: '10px' }}>
             <JudetSelect value={county} onChange={setCounty} />
           </div>
         </div>
       )}
 
-      {error && (
-        <p style={{ color: '#ff6b6b', margin: 0, fontSize: '14px' }}>{error}</p>
-      )}
+      {error && <p style={{ color: '#ff6b6b', margin: 0, fontSize: '14px' }}>{error}</p>}
 
       {/* Sumar comandă */}
-      <div style={{
-        background: '#111', border: '1px solid #222', borderRadius: '10px', padding: '16px',
-      }}>
+      <div style={{ background: '#111', border: '1px solid #222', borderRadius: '10px', padding: '16px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', color: '#aaa', fontSize: '14px' }}>
           <span>Produs (x{qty})</span>
           <span style={{ color: '#fff' }}>{price} RON</span>
         </div>
+
+        {/* Transport — vizibil doar pentru 1 produs */}
+        {qty === 1 && (
+          <div style={{
+            display: 'flex', justifyContent: 'space-between',
+            color: '#aaa', fontSize: '14px', marginTop: '8px',
+          }}>
+            <span>Transport {deliveryType === 'easybox' ? 'EasyBox' : 'Curier'}</span>
+            <span style={{ color: '#fff' }}>{transportCost.toFixed(2)} RON</span>
+          </div>
+        )}
+
+        {qty > 1 && (
+          <div style={{
+            display: 'flex', justifyContent: 'space-between',
+            color: '#4caf50', fontSize: '13px', marginTop: '8px',
+          }}>
+            <span>Transport</span>
+            <span>GRATUIT</span>
+          </div>
+        )}
+
         <div style={{
           display: 'flex', justifyContent: 'space-between',
-          color: '#C9A020', fontWeight: '700', fontSize: '16px', marginTop: '8px',
+          color: '#C9A020', fontWeight: '700', fontSize: '16px',
+          marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #333',
         }}>
           <span>Total</span>
-          <span>{price} RON</span>
+          <span>{totalFinal.toFixed(2)} RON</span>
         </div>
       </div>
 
-      <button
-        type="button"
-        onClick={handleSubmit}
-        disabled={loading}
-        style={{
-          width: '100%', padding: '16px', background: loading ? '#555' : '#C9A020',
-          border: 'none', borderRadius: '10px', color: '#000', fontWeight: '800',
-          fontSize: '16px', cursor: loading ? 'not-allowed' : 'pointer',
-          fontFamily: 'Montserrat, sans-serif', letterSpacing: '1px',
-          textTransform: 'uppercase', transition: 'background 0.2s',
-        }}
-      >
+      <button type="button" onClick={handleSubmit} disabled={loading} style={{
+        width: '100%', padding: '16px', background: loading ? '#555' : '#C9A020',
+        border: 'none', borderRadius: '10px', color: '#000', fontWeight: '800',
+        fontSize: '16px', cursor: loading ? 'not-allowed' : 'pointer',
+        fontFamily: 'Montserrat, sans-serif', letterSpacing: '1px',
+        textTransform: 'uppercase', transition: 'background 0.2s',
+      }}>
         {loading ? 'Se procesează...' : 'Plasează Comanda'}
       </button>
     </div>
