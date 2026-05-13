@@ -80,30 +80,20 @@ export async function createAWB(params: AWBParams): Promise<{ awb: string }> {
     payload.locker = params.lockerId;
   }
 
-  // Incearca toate formatele de token pana gasim ce accepta Sameday
-  const tokenFormats = [token, `Bearer ${token}`, `Token ${token}`];
+  const res = await fetch(`${SAMEDAY_API}/api/awb`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-AUTH-TOKEN': token,
+    },
+    body: JSON.stringify(payload),
+  });
 
-  for (const authHeader of tokenFormats) {
-    const res = await fetch(`${SAMEDAY_API}/api/awb`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: authHeader,
-      },
-      body: JSON.stringify(payload),
-    });
+  const data = await res.json();
 
-    const data = await res.json();
-
-    if (res.ok && data.awbNumber) {
-      return { awb: data.awbNumber };
-    }
-
-    // Daca e 401 incearca urmatorul format, altfel arunca eroare
-    if (res.status !== 401) {
-      throw new Error(`Sameday AWB error: ${JSON.stringify(data)}`);
-    }
+  if (res.ok && data.awbNumber) {
+    return { awb: data.awbNumber };
   }
 
-  throw new Error('Sameday AWB: toate formatele de token au esuat');
+  throw new Error(`Sameday AWB error: ${JSON.stringify(data)}`);
 }
