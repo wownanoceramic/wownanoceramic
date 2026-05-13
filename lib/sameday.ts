@@ -44,10 +44,12 @@ export async function createAWB(params: AWBParams): Promise<{ awb: string }> {
 
   const weight = Math.max(params.quantity * 0.2, 0.5);
 
-  // ID-uri corecte extrase din API:
   // 7  = 24H (curier NextDay)
   // 15 = Locker NextDay (EasyBox)
   const serviceId = params.deliveryType === 'easybox' ? 15 : 7;
+
+  // Adresa destinatar — obligatorie mereu
+  const addressStr = params.street || params.city || 'Livrare EasyBox';
 
   const payload: any = {
     pickupPoint,
@@ -65,17 +67,18 @@ export async function createAWB(params: AWBParams): Promise<{ awb: string }> {
       name: params.name,
       phoneNumber: params.phone,
       email: params.email,
-      personType: 0,        // 0 = persoana fizica, 1 = persoana juridica
+      personType: 0,
       postalCode: '',
       countyString: params.county,
       cityString: params.city,
-      address: params.street,
+      address: addressStr,   // ← obligatoriu, nu poate fi gol
     },
     parcels: [{ weight, width: 15, length: 20, height: 5, type: 1 }],
   };
 
+  // Pentru EasyBox folosim lockerId direct în payload (nu locker/lockerLastMile)
   if (params.deliveryType === 'easybox' && params.lockerId) {
-    payload.locker = params.lockerId;
+    payload.lockerId = params.lockerId;
   }
 
   const res = await fetch(`${SAMEDAY_API}/api/awb`, {
