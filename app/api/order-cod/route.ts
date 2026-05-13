@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { createAWB } from '@/lib/sameday';
-import { createInvoice } from '@/lib/oblio';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -45,25 +44,7 @@ export async function POST(req: NextRequest) {
       awbError = err.message;
     }
 
-    // ── 2. Factură Oblio ──────────────────────────────────────────────────────
-    let invoice = null;
-    try {
-      const unitPrice = Number((parseFloat(cashOnDelivery) / parseInt(quantity)).toFixed(2));
-      invoice = await createInvoice({
-        name, email, phone,
-        address: street || '',
-        city: city || '',
-        county: county || '',
-        quantity: parseInt(quantity),
-        unitPrice,
-        totalAmount: parseFloat(cashOnDelivery),
-      });
-      console.log(`Factură Oblio: ${invoice.seriesName} ${invoice.number}`);
-    } catch (err: any) {
-      console.error('Oblio error:', err.message);
-    }
-
-    // ── 3. Email Admin ────────────────────────────────────────────────────────
+    // ── 2. Email Admin ────────────────────────────────────────────────────────
     await resend.emails.send({
       from: 'comenzi@wownanoceramic.ro',
       to: 'contact@wownanoceramic.ro',
@@ -90,17 +71,13 @@ export async function POST(req: NextRequest) {
                 <td style="padding:8px;border:1px solid #eee;font-weight:bold;color:${awbNumber ? '#2e7d32' : '#c62828'}">
                   ${awbNumber ? `✅ ${awbNumber}` : `❌ ${awbError || 'Indisponibil momentan'}`}
                 </td></tr>
-            <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Factură Oblio</td>
-                <td style="padding:8px;border:1px solid #eee;font-weight:bold;color:${invoice ? '#2e7d32' : '#c62828'}">
-                  ${invoice ? `✅ ${invoice.seriesName} ${invoice.number}` : '❌ Eroare emitere'}
-                </td></tr>
           </table>
           ${awbNumber ? `<p style="margin-top:16px"><a href="https://sameday.ro/track?awb=${awbNumber}" style="color:#C9A020">🔗 Tracking AWB</a></p>` : ''}
         </div>
       `,
     });
 
-    // ── 4. Email Client ───────────────────────────────────────────────────────
+    // ── 3. Email Client ───────────────────────────────────────────────────────
     await resend.emails.send({
       from: 'comenzi@wownanoceramic.ro',
       to: email,
