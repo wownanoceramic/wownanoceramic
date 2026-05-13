@@ -2,30 +2,28 @@ const OBLIO_API = 'https://www.oblio.eu/api';
 const CIF = '51554728';
 const SERIES = 'SW';
 
+// ── Numele gestiunii din Oblio → Setări → Gestiuni (lasă '' dacă nu știi exact) ──
+const GESTIUNE = '';
+
 // ─── OAuth 2.0 Token (x-www-form-urlencoded) ─────────────────────────────────
 async function getOblioToken(): Promise<string> {
   const params = new URLSearchParams({
     client_id: process.env.OBLIO_EMAIL!,
     client_secret: process.env.OBLIO_SECRET!,
   });
-
   const res = await fetch(`${OBLIO_API}/authorize/token`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: params.toString(),
   });
-
+  const rawAuth = await res.text();
   if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Oblio auth failed: ${err}`);
+    throw new Error(`Oblio auth failed [${res.status}]: ${rawAuth}`);
   }
-
-  const data = await res.json();
-
+  const data = JSON.parse(rawAuth);
   if (!data.access_token) {
-    throw new Error(`Oblio: token lipsa in raspuns: ${JSON.stringify(data)}`);
+    throw new Error(`Oblio: token lipsa in raspuns: ${rawAuth}`);
   }
-
   return data.access_token;
 }
 
@@ -49,8 +47,23 @@ export async function createInvoice(params: InvoiceParams): Promise<{
   link: string;
 }> {
   const token = await getOblioToken();
-
   const today = new Date().toISOString().split('T')[0];
+
+  const product: Record<string, any> = {
+    name: 'WOW NanoCeramic - Soluție Protecție Ceramică',
+    code: 'WNC-001',
+    price: params.unitPrice,
+    measuringUnit: 'buc',
+    vatName: 'Normala',
+    vatPercentage: 21,
+    vatIncluded: 1,
+    quantity: params.quantity,
+    productType: 'Marfa',
+  };
+
+  if (GESTIUNE) {
+    product.management = GESTIUNE;
+  }
 
   const payload = {
     cif: CIF,
@@ -71,20 +84,11 @@ export async function createInvoice(params: InvoiceParams): Promise<{
     language: 'RO',
     precision: 2,
     currency: 'RON',
-    products: [
-      {
-        name: 'WOW NanoCeramic - Soluție Protecție Ceramică',
-        code: 'WNC-001',
-        price: params.unitPrice,
-        measuringUnit: 'buc',
-        vatName: 'Normala',
-        vatPercentage: 21,
-        vatIncluded: 1,
-        quantity: params.quantity,
-        productType: 'Marfa',
-      },
-    ],
+    useStock: 1,
+    products: [product],
   };
+
+  console.log('[Oblio] payload:', JSON.stringify(payload));
 
   const res = await fetch(`${OBLIO_API}/docs/invoice`, {
     method: 'POST',
@@ -95,10 +99,18 @@ export async function createInvoice(params: InvoiceParams): Promise<{
     body: JSON.stringify(payload),
   });
 
-  const data = await res.json();
+  const rawInvoice = await res.text();
+  console.log(`[Oblio] response [${res.status}]:`, rawInvoice);
+
+  let data: any;
+  try {
+    data = JSON.parse(rawInvoice);
+  } catch {
+    throw new Error(`Oblio invoice: JSON invalid [${res.status}]: ${rawInvoice}`);
+  }
 
   if (!res.ok || data.status !== 200) {
-    throw new Error(`Oblio invoice error: ${JSON.stringify(data)}`);
+    throw new Error(`Oblio invoice error [${res.status}]: ${JSON.stringify(data)}`);
   }
 
   return {
