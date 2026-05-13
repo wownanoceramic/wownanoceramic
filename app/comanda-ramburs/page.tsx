@@ -25,12 +25,16 @@ function EasyboxWidget({ onSelect }: {
       initialized.current = true;
       try {
         (window as any).LockerPlugin.init({
-          // Folosim API username-ul (fara 2FA) pentru widget
-          apiUsername: process.env.NEXT_PUBLIC_SAMEDAY_API_USERNAME || '',
+          clientId: 'a1123899-1c58-4162-bf71-e2d2a320722b', // ← clientId oficial whitelistat
+          apiUsername: 'starwowAPI',                         // ← LM username Sameday
           countryCode: 'RO',
           langCode: 'ro',
+          theme: 'dark',
         });
+
         const instance = (window as any).LockerPlugin.getInstance();
+
+        // Callback când utilizatorul selectează un locker
         instance.subscribe((msg: any) => {
           if (msg?.lockerId) {
             onSelect({
@@ -39,8 +43,15 @@ function EasyboxWidget({ onSelect }: {
               address: msg.address || '',
               city: msg.city || '',
             });
+            instance.close(); // Închide harta după selecție
           }
         });
+
+        // Callback când plugin-ul e închis (fără selecție sau după)
+        instance.subscribeToPluginClosed(() => {
+          // Poți adăuga logică suplimentară aici dacă e nevoie
+        });
+
         setSdkReady(true);
       } catch (e) {
         console.error('LockerPlugin init error:', e);
@@ -52,8 +63,8 @@ function EasyboxWidget({ onSelect }: {
       return;
     }
 
-    const existing = document.getElementById('sameday-sdk');
-    if (existing) return;
+    // Evită încărcarea duplicată a scriptului
+    if (document.getElementById('sameday-sdk')) return;
 
     const script = document.createElement('script');
     script.id = 'sameday-sdk';
@@ -65,10 +76,18 @@ function EasyboxWidget({ onSelect }: {
   }, []);
 
   function handleOpen() {
-    if ((window as any).LockerPlugin && sdkReady) {
-      (window as any).LockerPlugin.getInstance().open();
+    const plugin = (window as any).LockerPlugin;
+    if (plugin && sdkReady) {
+      plugin.getInstance().open();
+    } else if (plugin && !sdkReady) {
+      // SDK încărcat dar init nu e gata — reîncercăm
+      setTimeout(() => {
+        if ((window as any).LockerPlugin) {
+          (window as any).LockerPlugin.getInstance().open();
+        }
+      }, 500);
     } else {
-      window.open('https://sameday.ro/easybox', '_blank');
+      alert('Harta EasyBox se încarcă. Încearcă din nou în câteva secunde.');
     }
   }
 
