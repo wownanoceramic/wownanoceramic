@@ -12,12 +12,13 @@ const JUDETE = [
   'Vâlcea','Vaslui','Vrancea',
 ];
 
-const TRANSPORT_CURIER = 21.99;
+const TRANSPORT_CURIER  = 21.99;
 const TRANSPORT_EASYBOX = 16.99;
 
-// ─── EasyBox Widget (SDK oficial Sameday) ─────────────────────────────────────
-function EasyboxWidget({ onSelect }: {
+// ─── EasyBox Widget ───────────────────────────────────────────────────────────
+function EasyboxWidget({ onSelect, county }: {
   onSelect: (locker: { id: number; name: string; address: string; city: string }) => void;
+  county: string;
 }) {
   const [sdkReady, setSdkReady] = useState(false);
   const initialized = useRef(false);
@@ -70,12 +71,27 @@ function EasyboxWidget({ onSelect }: {
 
   function handleOpen() {
     const plugin = (window as any).LockerPlugin;
-    if (plugin && sdkReady) {
-      plugin.getInstance().open();
-    } else if (plugin && !sdkReady) {
-      setTimeout(() => { if ((window as any).LockerPlugin) (window as any).LockerPlugin.getInstance().open(); }, 500);
-    } else {
+    if (!plugin) {
       alert('Harta EasyBox se încarcă. Încearcă din nou în câteva secunde.');
+      return;
+    }
+
+    if (!sdkReady) {
+      setTimeout(() => handleOpen(), 500);
+      return;
+    }
+
+    const instance = plugin.getInstance();
+
+    // Dacă e selectat un județ, filtrăm automat harta după el
+    if (county) {
+      try {
+        instance.open({ county });
+      } catch {
+        instance.open();
+      }
+    } else {
+      instance.open();
     }
   }
 
@@ -84,7 +100,7 @@ function EasyboxWidget({ onSelect }: {
       width: '100%', padding: '12px', background: '#1a1a1a',
       border: '1px solid #C9A020', color: '#C9A020', borderRadius: '8px',
       cursor: 'pointer', fontFamily: 'Montserrat, sans-serif',
-      fontSize: '14px', fontWeight: '600', marginTop: '8px',
+      fontSize: '14px', fontWeight: '600',
     }}>
       📍 {sdkReady ? 'Deschide harta EasyBox' : 'Se încarcă harta...'}
     </button>
@@ -144,11 +160,15 @@ function ComandaForm() {
   const [error,   setError]   = useState('');
   const [success, setSuccess] = useState('');
 
-  // Cost transport — doar pentru 1 produs
+  // Când se selectează un locker EasyBox, completăm automat orașul
+  function handleLockerSelect(l: { id: number; name: string; address: string; city: string }) {
+    setLocker(l);
+    if (l.city) setCity(l.city);
+  }
+
   const transportCost = qty === 1
     ? (deliveryType === 'easybox' ? TRANSPORT_EASYBOX : TRANSPORT_CURIER)
     : 0;
-
   const totalFinal = price + transportCost;
 
   async function handleSubmit() {
@@ -166,13 +186,17 @@ function ComandaForm() {
       setError('Selectează un punct EasyBox de pe hartă.');
       return;
     }
+    if (deliveryType === 'easybox' && !county) {
+      setError('Selectează județul pentru livrare EasyBox.');
+      return;
+    }
 
     setLoading(true);
     try {
       const body: any = {
         name, phone, email,
         quantity: qty,
-        cashOnDelivery: totalFinal,  // ← include transportul pentru qty=1
+        cashOnDelivery: totalFinal,
         deliveryType,
       };
 
@@ -181,11 +205,11 @@ function ComandaForm() {
         body.city   = city;
         body.county = county;
       } else {
-        body.lockerId    = locker!.id;
-        body.lockerName  = locker!.name;
-        body.street      = locker!.address;
-        body.city        = locker!.city;
-        body.county      = county || 'București';
+        body.lockerId   = locker!.id;
+        body.lockerName = locker!.name;
+        body.street     = locker!.address;
+        body.city       = locker!.city || city;
+        body.county     = county;
       }
 
       const res  = await fetch('/api/order-cod', {
@@ -237,11 +261,11 @@ function ComandaForm() {
       </div>
 
       {/* Date personale */}
-      <Input placeholder="Nume complet *"          value={name}  onChange={setName} />
-      <Input placeholder="Telefon *"               value={phone} onChange={setPhone} type="tel" />
-      <Input placeholder="Email *"                 value={email} onChange={setEmail} type="email" />
+      <Input placeholder="Nume complet *" value={name}  onChange={setName} />
+      <Input placeholder="Telefon *"      value={phone} onChange={setPhone} type="tel" />
+      <Input placeholder="Email *"        value={email} onChange={setEmail} type="email" />
 
-      {/* Adresa curier */}
+      {/* ── CURIER ── */}
       {deliveryType === 'curier' && (
         <>
           <Input placeholder="Stradă, număr, apartament *" value={street} onChange={setStreet} />
@@ -250,13 +274,20 @@ function ComandaForm() {
         </>
       )}
 
-      {/* EasyBox selector */}
+      {/* ── EASYBOX ── */}
       {deliveryType === 'easybox' && (
-        <div>
-          <EasyboxWidget onSelect={setLocker} />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+
+          {/* 1. Județ PRIMUL — filtrează harta automat */}
+          <JudetSelect value={county} onChange={setCounty} />
+
+          {/* 2. Buton hartă */}
+          <EasyboxWidget onSelect={handleLockerSelect} county={county} />
+
+          {/* 3. Locker selectat */}
           {locker && (
             <div style={{
-              marginTop: '10px', padding: '12px', background: '#0d1a0d',
+              padding: '12px', background: '#0d1a0d',
               border: '1px solid #2a5c2a', borderRadius: '8px',
             }}>
               <p style={{ color: '#4caf50', fontWeight: '700', margin: 0 }}>✓ EasyBox selectat</p>
@@ -271,9 +302,6 @@ function ComandaForm() {
               </button>
             </div>
           )}
-          <div style={{ marginTop: '10px' }}>
-            <JudetSelect value={county} onChange={setCounty} />
-          </div>
         </div>
       )}
 
@@ -286,22 +314,15 @@ function ComandaForm() {
           <span style={{ color: '#fff' }}>{price} RON</span>
         </div>
 
-        {/* Transport — vizibil doar pentru 1 produs */}
         {qty === 1 && (
-          <div style={{
-            display: 'flex', justifyContent: 'space-between',
-            color: '#aaa', fontSize: '14px', marginTop: '8px',
-          }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', color: '#aaa', fontSize: '14px', marginTop: '8px' }}>
             <span>Transport {deliveryType === 'easybox' ? 'EasyBox' : 'Curier'}</span>
             <span style={{ color: '#fff' }}>{transportCost.toFixed(2)} RON</span>
           </div>
         )}
 
         {qty > 1 && (
-          <div style={{
-            display: 'flex', justifyContent: 'space-between',
-            color: '#4caf50', fontSize: '13px', marginTop: '8px',
-          }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', color: '#4caf50', fontSize: '13px', marginTop: '8px' }}>
             <span>Transport</span>
             <span>GRATUIT</span>
           </div>
