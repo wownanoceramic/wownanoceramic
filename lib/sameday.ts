@@ -40,13 +40,14 @@ export async function createAWB(params: AWBParams): Promise<{ awb: string }> {
 
   const pickupPoint = params.pickupPointId
     || Number(process.env.SAMEDAY_PICKUP_POINT)
-    || 396691;
+    || 435303;
 
   const weight = Math.max(params.quantity * 0.2, 0.5);
 
-  const serviceId = params.deliveryType === 'easybox'
-    ? Number(process.env.SAMEDAY_SERVICE_EASYBOX) || 39
-    : Number(process.env.SAMEDAY_SERVICE_NEXTDAY) || 7;
+  // ID-uri corecte extrase din API:
+  // 7  = 24H (curier NextDay)
+  // 15 = Locker NextDay (EasyBox)
+  const serviceId = params.deliveryType === 'easybox' ? 15 : 7;
 
   const payload: any = {
     pickupPoint,
@@ -64,14 +65,11 @@ export async function createAWB(params: AWBParams): Promise<{ awb: string }> {
       name: params.name,
       phoneNumber: params.phone,
       email: params.email,
-      address: {
-        name: params.name,
-        postalCode: '',
-        city: params.city,
-        county: params.county,
-        countryCode: 'RO',
-        details: params.street,
-      },
+      personType: 0,        // 0 = persoana fizica, 1 = persoana juridica
+      postalCode: '',
+      countyString: params.county,
+      cityString: params.city,
+      address: params.street,
     },
     parcels: [{ weight, width: 15, length: 20, height: 5, type: 1 }],
   };
