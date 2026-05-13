@@ -15,6 +15,39 @@ const JUDETE = [
 const TRANSPORT_CURIER  = 21.99;
 const TRANSPORT_EASYBOX = 16.99;
 
+// Injectează județul în câmpul de căutare al widget-ului Sameday după ce se deschide
+function injectCountySearch(county: string) {
+  if (!county) return;
+
+  // Încearcă la fiecare 200ms, max 3 secunde
+  let attempts = 0;
+  const interval = setInterval(() => {
+    attempts++;
+
+    // Caută toate inputurile vizibile în pagină
+    const inputs = Array.from(document.querySelectorAll('input')) as HTMLInputElement[];
+
+    // Câmpul de județ are placeholder "Caută în funcție de județ"
+    const countyInput = inputs.find(el =>
+      el.placeholder?.toLowerCase().includes('jude') ||
+      el.placeholder?.toLowerCase().includes('county')
+    );
+
+    if (countyInput) {
+      // Setăm valoarea și triggeram evenimentele necesare
+      const nativeInputSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')?.set;
+      nativeInputSetter?.call(countyInput, county);
+      countyInput.dispatchEvent(new Event('input',  { bubbles: true }));
+      countyInput.dispatchEvent(new Event('change', { bubbles: true }));
+      countyInput.focus();
+      clearInterval(interval);
+      return;
+    }
+
+    if (attempts >= 15) clearInterval(interval); // Stop după 3s
+  }, 200);
+}
+
 // ─── EasyBox Widget ───────────────────────────────────────────────────────────
 function EasyboxWidget({ onSelect, county }: {
   onSelect: (locker: { id: number; name: string; address: string; city: string }) => void;
@@ -75,23 +108,16 @@ function EasyboxWidget({ onSelect, county }: {
       alert('Harta EasyBox se încarcă. Încearcă din nou în câteva secunde.');
       return;
     }
-
     if (!sdkReady) {
       setTimeout(() => handleOpen(), 500);
       return;
     }
 
-    const instance = plugin.getInstance();
+    plugin.getInstance().open();
 
-    // Dacă e selectat un județ, filtrăm automat harta după el
+    // După ce se deschide widget-ul, injectăm județul în search
     if (county) {
-      try {
-        instance.open({ county });
-      } catch {
-        instance.open();
-      }
-    } else {
-      instance.open();
+      setTimeout(() => injectCountySearch(county), 400);
     }
   }
 
@@ -160,7 +186,6 @@ function ComandaForm() {
   const [error,   setError]   = useState('');
   const [success, setSuccess] = useState('');
 
-  // Când se selectează un locker EasyBox, completăm automat orașul
   function handleLockerSelect(l: { id: number; name: string; address: string; city: string }) {
     setLocker(l);
     if (l.city) setCity(l.city);
@@ -173,37 +198,17 @@ function ComandaForm() {
 
   async function handleSubmit() {
     setError('');
-
-    if (!name || !phone || !email) {
-      setError('Completează numele, telefonul și email-ul.');
-      return;
-    }
-    if (deliveryType === 'curier' && (!street || !city || !county)) {
-      setError('Completează adresa completă pentru livrare curier.');
-      return;
-    }
-    if (deliveryType === 'easybox' && !locker) {
-      setError('Selectează un punct EasyBox de pe hartă.');
-      return;
-    }
-    if (deliveryType === 'easybox' && !county) {
-      setError('Selectează județul pentru livrare EasyBox.');
-      return;
-    }
+    if (!name || !phone || !email) { setError('Completează numele, telefonul și email-ul.'); return; }
+    if (deliveryType === 'curier' && (!street || !city || !county)) { setError('Completează adresa completă pentru livrare curier.'); return; }
+    if (deliveryType === 'easybox' && !locker)  { setError('Selectează un punct EasyBox de pe hartă.'); return; }
+    if (deliveryType === 'easybox' && !county)  { setError('Selectează județul pentru livrare EasyBox.'); return; }
 
     setLoading(true);
     try {
-      const body: any = {
-        name, phone, email,
-        quantity: qty,
-        cashOnDelivery: totalFinal,
-        deliveryType,
-      };
+      const body: any = { name, phone, email, quantity: qty, cashOnDelivery: totalFinal, deliveryType };
 
       if (deliveryType === 'curier') {
-        body.street = street;
-        body.city   = city;
-        body.county = county;
+        body.street = street; body.city = city; body.county = county;
       } else {
         body.lockerId   = locker!.id;
         body.lockerName = locker!.name;
@@ -212,15 +217,9 @@ function ComandaForm() {
         body.county     = county;
       }
 
-      const res  = await fetch('/api/order-cod', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-
+      const res  = await fetch('/api/order-cod', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Eroare la plasarea comenzii.');
-
       setSuccess(`✓ Comandă plasată! AWB: ${data.awb}`);
     } catch (e: any) {
       setError(e.message);
@@ -277,19 +276,11 @@ function ComandaForm() {
       {/* ── EASYBOX ── */}
       {deliveryType === 'easybox' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-
-          {/* 1. Județ PRIMUL — filtrează harta automat */}
           <JudetSelect value={county} onChange={setCounty} />
-
-          {/* 2. Buton hartă */}
           <EasyboxWidget onSelect={handleLockerSelect} county={county} />
 
-          {/* 3. Locker selectat */}
           {locker && (
-            <div style={{
-              padding: '12px', background: '#0d1a0d',
-              border: '1px solid #2a5c2a', borderRadius: '8px',
-            }}>
+            <div style={{ padding: '12px', background: '#0d1a0d', border: '1px solid #2a5c2a', borderRadius: '8px' }}>
               <p style={{ color: '#4caf50', fontWeight: '700', margin: 0 }}>✓ EasyBox selectat</p>
               <p style={{ color: '#ccc', margin: '4px 0 0', fontSize: '13px' }}>
                 {locker.name} — {locker.address}, {locker.city}
@@ -313,21 +304,17 @@ function ComandaForm() {
           <span>Produs (x{qty})</span>
           <span style={{ color: '#fff' }}>{price} RON</span>
         </div>
-
         {qty === 1 && (
           <div style={{ display: 'flex', justifyContent: 'space-between', color: '#aaa', fontSize: '14px', marginTop: '8px' }}>
             <span>Transport {deliveryType === 'easybox' ? 'EasyBox' : 'Curier'}</span>
             <span style={{ color: '#fff' }}>{transportCost.toFixed(2)} RON</span>
           </div>
         )}
-
         {qty > 1 && (
           <div style={{ display: 'flex', justifyContent: 'space-between', color: '#4caf50', fontSize: '13px', marginTop: '8px' }}>
-            <span>Transport</span>
-            <span>GRATUIT</span>
+            <span>Transport</span><span>GRATUIT</span>
           </div>
         )}
-
         <div style={{
           display: 'flex', justifyContent: 'space-between',
           color: '#C9A020', fontWeight: '700', fontSize: '16px',
