@@ -8,24 +8,19 @@ export async function GET() {
     method: 'POST',
     headers: { 'X-AUTH-USERNAME': user, 'X-AUTH-PASSWORD': pass },
   });
-  const authData = await authRes.json();
-  const token = authData.token;
+  const { token } = await authRes.json();
 
-  const results: any = {};
+  const [servicesRes, pickupRes] = await Promise.all([
+    fetch('https://api.sameday.ro/api/client/services', {
+      headers: { 'X-AUTH-TOKEN': token },
+    }),
+    fetch('https://api.sameday.ro/api/client/pickup-points', {
+      headers: { 'X-AUTH-TOKEN': token },
+    }),
+  ]);
 
-  // Testam X-AUTH-TOKEN
-  for (const [key, val] of [
-    ['Authorization', token],
-    ['Authorization', `Bearer ${token}`],
-    ['X-AUTH-TOKEN', token],
-    ['X-AUTH-TOKEN', `Bearer ${token}`],
-  ] as [string, string][]) {
-    const res = await fetch('https://api.sameday.ro/api/client/services', {
-      headers: { [key]: val },
-    });
-    const data = await res.json();
-    results[`${key}: ${val.substring(0, 8)}...`] = { status: res.status, ok: !!data.data };
-  }
+  const services = await servicesRes.json();
+  const pickups = await pickupRes.json();
 
-  return NextResponse.json({ results });
+  return NextResponse.json({ services: services.data, pickups: pickups.data });
 }
