@@ -63,6 +63,19 @@ export async function createAWB(params: AWBParams): Promise<{ awb: string }> {
     insuredValue: 0,
     thirdPartyPickup: 0,
     observation: params.observation || `WOW NanoCeramic x${params.quantity}`,
+
+    // ─── Override date expeditor ───────────────────────────────────────────
+    awbSender: {
+      name: 'STAR WOW S.R.L.',
+      contactPerson: 'www.wownanoceramic.ro',
+      phoneNumber: '+40771181151',
+      personType: 1,
+      postalCode: '240200',
+      countyString: 'Valcea',
+      cityString: 'Ramnicu Valcea',
+      address: 'Buna Vestire 13',
+    },
+
     awbRecipient: {
       name: params.name,
       phoneNumber: params.phone,
@@ -71,8 +84,9 @@ export async function createAWB(params: AWBParams): Promise<{ awb: string }> {
       postalCode: '',
       countyString: params.county,
       cityString: params.city,
-      address: addressStr,   // ← obligatoriu, nu poate fi gol
+      address: addressStr,
     },
+
     parcels: [{ weight, width: 15, length: 20, height: 5, type: 1 }],
   };
 
