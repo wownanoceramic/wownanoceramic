@@ -40,7 +40,7 @@ export async function createAWB(params: AWBParams): Promise<{ awb: string }> {
 
   const pickupPoint = params.pickupPointId
     || Number(process.env.SAMEDAY_PICKUP_POINT)
-    || 435303;
+    || 396691;
 
   const weight = Math.max(params.quantity * 0.2, 0.5);
 
