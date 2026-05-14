@@ -33,9 +33,7 @@ export default function AdminPage() {
   const [messages, setMessages] = useState<Record<string, { text: string; ok: boolean }>>({});
 
   const handleLogin = async () => {
-    const res = await fetch('/api/admin/orders', {
-      headers: { 'x-admin-password': password },
-    });
+    const res = await fetch(`/api/admin/orders?pwd=${encodeURIComponent(password)}`);
     if (res.ok) {
       setAuthed(true);
       setAuthError('');
@@ -48,9 +46,7 @@ export default function AdminPage() {
 
   const refreshOrders = async () => {
     setLoading(true);
-    const res = await fetch('/api/admin/orders', {
-      headers: { 'x-admin-password': password },
-    });
+    const res = await fetch(`/api/admin/orders?pwd=${encodeURIComponent(password)}`);
     if (res.ok) {
       const data = await res.json();
       setOrders(data.orders || []);
@@ -60,9 +56,9 @@ export default function AdminPage() {
 
   const generateAWB = async (orderId: string) => {
     setActionLoading(prev => ({ ...prev, [`awb_${orderId}`]: 'loading' }));
-    const res = await fetch('/api/admin/generate-awb', {
+    const res = await fetch(`/api/admin/generate-awb?pwd=${encodeURIComponent(password)}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-admin-password': password },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ orderId }),
     });
     const data = await res.json();
@@ -77,9 +73,9 @@ export default function AdminPage() {
 
   const generateInvoice = async (orderId: string) => {
     setActionLoading(prev => ({ ...prev, [`inv_${orderId}`]: 'loading' }));
-    const res = await fetch('/api/admin/generate-invoice', {
+    const res = await fetch(`/api/admin/generate-invoice?pwd=${encodeURIComponent(password)}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-admin-password': password },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ orderId }),
     });
     const data = await res.json();

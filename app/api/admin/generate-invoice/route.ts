@@ -6,7 +6,7 @@ import { createInvoice } from '@/lib/oblio';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: NextRequest) {
-  const pwd = req.headers.get('x-admin-password');
+  const pwd = req.nextUrl.searchParams.get('pwd');
   if (pwd !== process.env.ADMIN_PASSWORD) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
