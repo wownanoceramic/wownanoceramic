@@ -19,8 +19,15 @@ export async function POST(req: NextRequest) {
     if (!order) return NextResponse.json({ error: 'Comanda nu există' }, { status: 404 });
     if (order.invoiceNumber) return NextResponse.json({ error: 'Factură deja emisă', invoice: order.invoiceNumber }, { status: 400 });
 
+    // ── Calculez transport și preț produs ─────────────────────────────────────
+    let transportCost = 0;
+    if (order.quantity === 1) {
+      transportCost = order.deliveryType === 'easybox' ? 16.99 : 21.99;
+    }
+    const productTotal = Number((order.total - transportCost).toFixed(2));
+    const unitPrice = Number((productTotal / order.quantity).toFixed(2));
+
     // ── Emitere factură Oblio ─────────────────────────────────────────────────
-    const unitPrice = Number((order.total / order.quantity).toFixed(2));
     const invoice = await createInvoice({
       name: order.name,
       email: order.email,
@@ -30,6 +37,7 @@ export async function POST(req: NextRequest) {
       county: order.county,
       quantity: order.quantity,
       unitPrice,
+      transportCost,
       totalAmount: order.total,
     });
 
@@ -53,11 +61,17 @@ export async function POST(req: NextRequest) {
           <p>Îți trimitem factura fiscală pentru comanda ta.</p>
           <table style="width:100%;border-collapse:collapse;margin:20px 0">
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Produs</td>
-                <td style="padding:8px;border:1px solid #eee">WOW NanoCeramic x${order.quantity}</td></tr>
-            <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Total</td>
-                <td style="padding:8px;border:1px solid #eee;color:#C9A020;font-weight:bold">${order.total} RON</td></tr>
-            <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Factură</td>
-                <td style="padding:8px;border:1px solid #eee;font-weight:bold">${invoice.seriesName} ${invoice.number}</td></tr>
+                <td style="padding:8px;border:1px solid #eee">Kit Complet WOW NanoCeramic x${order.quantity}</td>
+                <td style="padding:8px;border:1px solid #eee;text-align:right">${productTotal.toFixed(2)} RON</td></tr>
+            ${transportCost > 0 ? `
+            <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Transport</td>
+                <td style="padding:8px;border:1px solid #eee">${order.deliveryType === 'easybox' ? 'EasyBox' : 'Curier'}</td>
+                <td style="padding:8px;border:1px solid #eee;text-align:right">${transportCost.toFixed(2)} RON</td></tr>
+            ` : ''}
+            <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold" colspan="2">Total</td>
+                <td style="padding:8px;border:1px solid #eee;color:#C9A020;font-weight:bold;text-align:right">${order.total.toFixed(2)} RON</td></tr>
+            <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold" colspan="2">Factură</td>
+                <td style="padding:8px;border:1px solid #eee;font-weight:bold;text-align:right">${invoice.seriesName} ${invoice.number}</td></tr>
           </table>
           ${invoice.link ? `
           <p style="margin-top:16px">
