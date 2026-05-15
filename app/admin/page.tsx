@@ -71,6 +71,22 @@ export default function AdminPage() {
     setActionLoading(prev => ({ ...prev, [`awb_${orderId}`]: '' }));
   };
 
+  const resendTracking = async (orderId: string) => {
+    setActionLoading(prev => ({ ...prev, [`track_${orderId}`]: 'loading' }));
+    const res = await fetch(`/api/admin/resend-tracking?pwd=${encodeURIComponent(password)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderId }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      setMessages(prev => ({ ...prev, [orderId]: { text: `✅ Email tracking retrimis!`, ok: true } }));
+    } else {
+      setMessages(prev => ({ ...prev, [orderId]: { text: `❌ ${data.error}`, ok: false } }));
+    }
+    setActionLoading(prev => ({ ...prev, [`track_${orderId}`]: '' }));
+  };
+
   const generateInvoice = async (orderId: string) => {
     setActionLoading(prev => ({ ...prev, [`inv_${orderId}`]: 'loading' }));
     const res = await fetch(`/api/admin/generate-invoice?pwd=${encodeURIComponent(password)}`, {
@@ -235,6 +251,18 @@ export default function AdminPage() {
                     }}
                   >
                     {actionLoading[`awb_${order.id}`] === 'loading' ? '⏳ Generare...' : order.awb ? '✅ AWB Generat' : '📦 Generează AWB Sameday'}
+                  </button>
+
+                  <button
+                    onClick={() => resendTracking(order.id)}
+                    disabled={!order.awb || actionLoading[`track_${order.id}`] === 'loading'}
+                    style={{
+                      padding: '10px 20px', borderRadius: '8px', border: 'none', cursor: !order.awb ? 'not-allowed' : 'pointer',
+                      background: !order.awb ? '#2a2a2a' : '#1565c0', color: !order.awb ? '#666' : '#fff',
+                      fontWeight: 'bold', fontSize: '14px', opacity: !order.awb ? 0.6 : 1,
+                    }}
+                  >
+                    {actionLoading[`track_${order.id}`] === 'loading' ? '⏳ Trimitere...' : '📧 Retrimite Email Tracking'}
                   </button>
 
                   <button
