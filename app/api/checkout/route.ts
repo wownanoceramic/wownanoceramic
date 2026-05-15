@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
             currency: 'ron',
             product_data: {
               name: `WOW NanoCeramic Restore & Protect x${quantity}`,
-              description: 'Formula Pro 100ml',
+              description: 'Kit Complet WOW NanoCeramic Restore & Protect',
             },
             unit_amount: totalPrice * 100,
           },
