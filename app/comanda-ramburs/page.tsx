@@ -220,7 +220,7 @@ function ComandaForm() {
       const res  = await fetch('/api/order-cod', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Eroare la plasarea comenzii.');
-      setSuccess(`✓ Comandă plasată! AWB: ${data.awb}`);
+      setSuccess('✅ Comandă plasată cu succes!');
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -232,7 +232,8 @@ function ComandaForm() {
     return (
       <div style={{ textAlign: 'center', padding: '40px 0' }}>
         <p style={{ color: '#C9A020', fontSize: '20px', fontWeight: '700' }}>{success}</p>
-        <p style={{ color: '#aaa', marginTop: '12px' }}>Vei primi un email de confirmare în curând.</p>
+        <p style={{ color: '#aaa', marginTop: '12px' }}>Te vom contacta telefonic în scurt timp pentru confirmarea comenzii și generarea AWB-ului.</p>
+<p style={{ color: '#C9A020', marginTop: '8px', fontWeight: '700' }}>📞 Sunăm de la: 0771 181 151</p>
       </div>
     );
   }
