@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
@@ -238,5 +238,84 @@
   <p style="color:#555;font-size:.85rem;margin-top:20px">SC STAR WOW S.R.L. | contact@wownanoceramic.ro | 0771 181 151</p>
 </div>
 
+<!-- Cookie Banner -->
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1a1a1a;color:#f0f0f0;padding:20px 24px 24px;border-top:1px solid #333;box-shadow:0 -4px 32px rgba(0,0,0,0.4);font-family:system-ui,sans-serif;font-size:14px;line-height:1.6;">
+  <div style="max-width:860px;margin:0 auto;">
+    <p style="margin:0;font-weight:600;font-size:15px;color:#fff;">🍪 Folosim cookie-uri</p>
+    <p style="margin:6px 0 12px;color:#bbb;font-size:13px;">Folosim cookie-uri esențiale pentru funcționarea site-ului și, cu acordul tău, cookie-uri analitice (Google Analytics) și de marketing (Facebook Pixel). <a href="/cookies.html" style="color:#aaa;text-decoration:underline;">Politica cookies</a></p>
+    <div id="cookie-details" style="display:none;background:#252525;border-radius:8px;padding:14px 16px;margin-bottom:14px;">
+      <div style="margin-bottom:10px;opacity:0.6;">
+        <input type="checkbox" checked disabled /> <strong style="color:#ddd;">Cookie-uri esențiale</strong>
+        <div style="color:#999;font-size:12px;margin-left:20px;">Coș de cumpărături, sesiune, securitate. Nu pot fi dezactivate.</div>
+      </div>
+      <label style="display:block;margin-bottom:10px;cursor:pointer;">
+        <input type="checkbox" id="cb-analytics" checked /> <strong style="color:#ddd;">Cookie-uri analitice</strong>
+        <div style="color:#999;font-size:12px;margin-left:20px;">Google Analytics — trafic și comportament utilizatori, date anonimizate.</div>
+      </label>
+      <label style="display:block;cursor:pointer;">
+        <input type="checkbox" id="cb-marketing" checked /> <strong style="color:#ddd;">Cookie-uri de marketing</strong>
+        <div style="color:#999;font-size:12px;margin-left:20px;">Facebook Pixel — măsoară eficiența reclamelor.</div>
+      </label>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+      <button onclick="cookieAcceptAll()" style="background:#e8a020;color:#111;border:none;border-radius:6px;padding:10px 22px;font-weight:700;font-size:14px;cursor:pointer;">Accept tot</button>
+      <button onclick="cookieRejectAll()" style="background:transparent;color:#ccc;border:1px solid #555;border-radius:6px;padding:10px 22px;font-size:14px;cursor:pointer;">Refuz tot</button>
+      <button id="btn-personalize" onclick="cookieShowDetails()" style="background:transparent;color:#888;border:none;font-size:13px;cursor:pointer;text-decoration:underline;">Personalizez opțiunile</button>
+      <button id="btn-save" onclick="cookieSaveSelection()" style="display:none;background:#333;color:#ddd;border:1px solid #555;border-radius:6px;padding:10px 18px;font-size:14px;cursor:pointer;">Salvez selecția</button>
+    </div>
+  </div>
+</div>
+<div id="cookie-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9998;"></div>
+<script>
+(function(){
+  var COOKIE_KEY = 'wow_cookie_consent';
+  function getCookieConsent() {
+    var m = document.cookie.match(new RegExp('(?:^|; )' + COOKIE_KEY + '=([^;]*)'));
+    if (!m) return null;
+    try { return JSON.parse(decodeURIComponent(m[1])); } catch(e) { return null; }
+  }
+  function saveCookieConsent(obj) {
+    var d = new Date(); d.setDate(d.getDate() + 365);
+    document.cookie = COOKIE_KEY + '=' + encodeURIComponent(JSON.stringify(obj)) + '; expires=' + d.toUTCString() + '; path=/; SameSite=Lax';
+  }
+  function loadGA() {
+    if (document.querySelector('script[data-ga]')) return;
+    var GA_ID = 'G-QK4Q584Y0X';
+    var s1 = document.createElement('script'); s1.async = true; s1.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID; s1.setAttribute('data-ga','1'); document.head.appendChild(s1);
+    var s2 = document.createElement('script'); s2.setAttribute('data-ga','1'); s2.innerHTML = 'window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","' + GA_ID + '");'; document.head.appendChild(s2);
+  }
+  function hideBanner() {
+    document.getElementById('cookie-banner').style.display = 'none';
+    document.getElementById('cookie-overlay').style.display = 'none';
+  }
+  window.cookieAcceptAll = function() {
+    saveCookieConsent({analytics:true,marketing:true,decided:true});
+    loadGA(); hideBanner();
+  };
+  window.cookieRejectAll = function() {
+    saveCookieConsent({analytics:false,marketing:false,decided:true});
+    hideBanner();
+  };
+  window.cookieShowDetails = function() {
+    document.getElementById('cookie-details').style.display = 'block';
+    document.getElementById('btn-personalize').style.display = 'none';
+    document.getElementById('btn-save').style.display = 'inline-block';
+  };
+  window.cookieSaveSelection = function() {
+    var analytics = document.getElementById('cb-analytics').checked;
+    var marketing = document.getElementById('cb-marketing').checked;
+    saveCookieConsent({analytics:analytics,marketing:marketing,decided:true});
+    if (analytics) loadGA();
+    hideBanner();
+  };
+  var saved = getCookieConsent();
+  if (!saved || !saved.decided) {
+    document.getElementById('cookie-banner').style.display = 'block';
+    document.getElementById('cookie-overlay').style.display = 'block';
+  } else {
+    if (saved.analytics) loadGA();
+  }
+})();
+</script>
 </body>
 </html>
