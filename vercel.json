@@ -1,5 +1,12 @@
 {
   "framework": "nextjs",
+  "redirects": [
+    {
+      "source": "/tratament-ceramic-auto-:city.html",
+      "destination": "/tratament-ceramic-auto-:city",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/tratament-ceramic-auto-:city",
