@@ -11,6 +11,10 @@
     {
       "source": "/tratament-ceramic-auto-:city",
       "destination": "/tratament-ceramic-auto-:city.html"
+    },
+    {
+      "source": "/blog/:slug",
+      "destination": "/blog/:slug.html"
     }
   ]
 }
