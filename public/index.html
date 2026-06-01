@@ -299,8 +299,6 @@ footer{background:#040404;padding:72px 60px 36px}
 .pay-opt-sub{font-size:11px;color:var(--gray);margin-top:2px;font-weight:300}
 .pay-badge{font-size:9px;letter-spacing:1px;text-transform:uppercase;font-weight:700;padding:3px 8px}
 .pb-rec{background:rgba(201,160,32,0.12);color:var(--gold)}
-.pb-cod{background:rgba(255,255,255,0.05);color:var(--gray)}
-.cod-fee{display:flex;justify-content:space-between;font-size:12px;color:var(--gray);margin-bottom:10px}
 .cart-total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.05)}
 .ct-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray)}
 .ct-price{background:linear-gradient(135deg,#F0C040 0%,#B8860B 40%,#F5D060 60%,#8B6508 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700}
@@ -921,11 +919,7 @@ footer{background:#040404;padding:72px 60px 36px}
             <div class="pay-opt-title">📦 Ramburs</div>
             <div class="pay-opt-sub">Plătești la livrare</div>
           </div>
-          <span class="pay-badge pb-cod">+10 RON</span>
         </label>
-      </div>
-      <div class="cod-fee" id="codFee" style="display:none">
-        <span>Taxă ramburs</span><span>+10 RON</span>
       </div>
       <div class="cart-total-row">
         <span class="ct-label">Total</span>
@@ -1055,7 +1049,7 @@ function renderCart() {
 
 function recalcTotal() {
   var base = cart.reduce(function(s,i){ return s + i.price; }, 0);
-  var total = base + (payMethod === 'cod' ? 10 : 0);
+  var total = base;
   document.getElementById('cartTotal').textContent = total + ' RON';
   var tva = Math.round(total * 21 / 121 * 100) / 100;
   var tvaEl = document.getElementById('cartTVA');
@@ -1076,7 +1070,6 @@ function selPay(el, m) {
   payMethod = m;
   document.querySelectorAll('.pay-opt').forEach(function(o){ o.classList.remove('sel'); });
   el.classList.add('sel');
-  document.getElementById('codFee').style.display = m === 'cod' ? 'flex' : 'none';
   recalcTotal();
 }
 
