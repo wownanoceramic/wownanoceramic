@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     // ── Calculez transport și preț produs ─────────────────────────────────────
     let transportCost = 0;
     if (order.quantity === 1) {
-      transportCost = order.deliveryType === 'easybox' ? 16.99 : 21.99;
+      transportCost = order.deliveryType === 'easybox' ? 16.99 : 18.99;
     }
     const productTotal = Number((order.total - transportCost).toFixed(2));
     const unitPrice = Number((productTotal / order.quantity).toFixed(2));

@@ -12,7 +12,7 @@ const JUDETE = [
   'Vâlcea','Vaslui','Vrancea',
 ];
 
-const TRANSPORT_CURIER  = 21.99;
+const TRANSPORT_CURIER  = 18.99;
 const TRANSPORT_EASYBOX = 16.99;
 
 // Injectează județul în câmpul de căutare al widget-ului Sameday după ce se deschide
