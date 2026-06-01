@@ -1056,7 +1056,7 @@ function recalcTotal() {
   if (tvaEl) tvaEl.textContent = tva.toFixed(2).replace('.', ',') + ' RON';
   var shipNote = document.getElementById('shipNote');
   if (shipNote) {
-    if (base >= 199) {
+    if (payMethod === 'card' || base >= 198) {
       shipNote.innerHTML = '🚚 Livrare gratuită pentru această comandă!';
       shipNote.style.color = '#4caf50';
     } else {
