@@ -5,7 +5,13 @@
       "source": "/tratament-ceramic-auto-:city.html",
       "destination": "/tratament-ceramic-auto-:city",
       "permanent": true
-    }
+    },
+    { "source": "/despre.html",   "destination": "/despre",   "permanent": true },
+    { "source": "/transport.html","destination": "/transport","permanent": true },
+    { "source": "/termeni.html",  "destination": "/termeni",  "permanent": true },
+    { "source": "/returnare.html","destination": "/returnare","permanent": true },
+    { "source": "/cookies.html",  "destination": "/cookies",  "permanent": true },
+    { "source": "/gdpr.html",     "destination": "/gdpr",     "permanent": true }
   ],
   "rewrites": [
     {
@@ -15,6 +21,12 @@
     {
       "source": "/blog/:slug",
       "destination": "/blog/:slug.html"
-    }
+    },
+    { "source": "/despre",   "destination": "/despre.html"   },
+    { "source": "/transport","destination": "/transport.html" },
+    { "source": "/termeni",  "destination": "/termeni.html"  },
+    { "source": "/returnare","destination": "/returnare.html" },
+    { "source": "/cookies",  "destination": "/cookies.html"  },
+    { "source": "/gdpr",     "destination": "/gdpr.html"     }
   ]
 }
