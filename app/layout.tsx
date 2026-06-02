@@ -1,4 +1,5 @@
 import CookieBanner from '@/components/CookieBanner'
+import { Analytics } from '@vercel/analytics/next'
 
 export const metadata = {
   title: 'WOW NanoCeramic Restore & Protect',
@@ -33,6 +34,7 @@ export default function RootLayout({
       <body>
         {children}
         <CookieBanner />
+        <Analytics />
       </body>
     </html>
   )
