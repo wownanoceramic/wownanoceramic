@@ -926,7 +926,7 @@ function generatePage(city) {
   <p>Nu lăsa ${city.context} să îți distrugă mașina. WOW NanoCeramic — protecție profesională la îndemâna oricui.</p>
   <div class="price-badge">99 RON — Kit Complet cu Livrare în ${city.name}</div><br><br>
   <a href="/" class="btn-main">Comandă Acum — Livrare 24h</a>
-  <p style="color:#555;font-size:.85rem;margin-top:20px">SC STAR WOW S.R.L. | contact@wownanoceramic.ro | 0771 181 151</p>
+  <p style="color:#555;font-size:.85rem;margin-top:20px">STAR WOW S.R.L. | contact@wownanoceramic.ro | 0771 181 151</p>
 </div>
 
 </body>

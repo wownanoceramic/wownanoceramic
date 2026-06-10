@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
           <p>Livrare estimată: <strong>1-2 zile lucrătoare</strong></p>
           <p>Vei primi numărul AWB de tracking imediat după procesare.</p>
           <p>Pentru orice întrebări: <a href="mailto:contact@wownanoceramic.ro">contact@wownanoceramic.ro</a> sau 0771 181 151</p>
-          <p style="color:#888;font-size:12px">SC STAR WOW S.R.L.</p>
+          <p style="color:#888;font-size:12px">STAR WOW S.R.L.</p>
         </div>
       `,
     });

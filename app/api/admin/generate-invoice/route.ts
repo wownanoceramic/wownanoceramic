@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
             </a>
           </p>` : ''}
           <p>Pentru orice întrebări: <a href="mailto:contact@wownanoceramic.ro">contact@wownanoceramic.ro</a> sau 0771 181 151</p>
-          <p style="color:#888;font-size:12px">SC STAR WOW S.R.L.</p>
+          <p style="color:#888;font-size:12px">STAR WOW S.R.L.</p>
         </div>
       `,
     });
