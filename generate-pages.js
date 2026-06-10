@@ -704,6 +704,67 @@ const cities = [
   },
 ];
 
+const cityLinks = {
+  'alba-iulia': ['sibiu', 'targu-mures', 'deva', 'cluj-napoca'],
+  'alexandria': ['bucuresti', 'pitesti', 'giurgiu', 'craiova'],
+  'arad': ['timisoara', 'deva', 'oradea', 'resita'],
+  'bacau': ['piatra-neamt', 'iasi', 'focsani', 'vaslui'],
+  'baia-mare': ['satu-mare', 'zalau', 'cluj-napoca', 'bistrita'],
+  'bistrita': ['cluj-napoca', 'targu-mures', 'baia-mare', 'suceava'],
+  'botosani': ['suceava', 'iasi', 'piatra-neamt', 'vaslui'],
+  'braila': ['galati', 'focsani', 'constanta', 'tulcea'],
+  'brasov': ['sfantu-gheorghe', 'sibiu', 'targoviste', 'ploiesti'],
+  'bucuresti': ['ploiesti', 'pitesti', 'targoviste', 'giurgiu', 'alexandria'],
+  'buzau': ['ploiesti', 'focsani', 'braila', 'bucuresti'],
+  'calarasi': ['bucuresti', 'slobozia', 'giurgiu', 'constanta'],
+  'cluj-napoca': ['oradea', 'baia-mare', 'bistrita', 'targu-mures', 'zalau'],
+  'constanta': ['tulcea', 'braila', 'galati', 'calarasi'],
+  'craiova': ['targu-jiu', 'slatina', 'drobeta-turnu-severin', 'ramnicu-valcea'],
+  'deva': ['arad', 'alba-iulia', 'timisoara', 'targu-jiu'],
+  'drobeta-turnu-severin': ['targu-jiu', 'craiova', 'resita', 'ramnicu-valcea'],
+  'focsani': ['bacau', 'galati', 'buzau', 'braila'],
+  'galati': ['braila', 'focsani', 'tulcea', 'constanta'],
+  'giurgiu': ['bucuresti', 'alexandria', 'calarasi', 'pitesti'],
+  'iasi': ['botosani', 'suceava', 'bacau', 'vaslui'],
+  'miercurea-ciuc': ['sfantu-gheorghe', 'brasov', 'targu-mures', 'bacau'],
+  'oradea': ['cluj-napoca', 'satu-mare', 'zalau', 'arad'],
+  'piatra-neamt': ['bacau', 'suceava', 'iasi', 'botosani'],
+  'pitesti': ['bucuresti', 'targoviste', 'ramnicu-valcea', 'craiova'],
+  'ploiesti': ['bucuresti', 'targoviste', 'brasov', 'buzau'],
+  'ramnicu-valcea': ['pitesti', 'craiova', 'slatina', 'targu-jiu'],
+  'resita': ['timisoara', 'arad', 'drobeta-turnu-severin', 'deva'],
+  'satu-mare': ['baia-mare', 'oradea', 'zalau', 'cluj-napoca'],
+  'sfantu-gheorghe': ['brasov', 'miercurea-ciuc', 'targu-mures', 'sibiu'],
+  'sibiu': ['alba-iulia', 'brasov', 'targu-mures', 'ramnicu-valcea'],
+  'slatina': ['craiova', 'pitesti', 'ramnicu-valcea', 'targu-jiu'],
+  'slobozia': ['calarasi', 'bucuresti', 'constanta', 'braila'],
+  'suceava': ['botosani', 'iasi', 'piatra-neamt', 'bistrita'],
+  'targoviste': ['bucuresti', 'ploiesti', 'pitesti', 'brasov'],
+  'targu-jiu': ['craiova', 'drobeta-turnu-severin', 'ramnicu-valcea', 'deva'],
+  'targu-mures': ['cluj-napoca', 'sibiu', 'bistrita', 'alba-iulia'],
+  'timisoara': ['arad', 'resita', 'deva', 'oradea'],
+  'tulcea': ['constanta', 'braila', 'galati', 'slobozia'],
+  'vaslui': ['iasi', 'bacau', 'botosani', 'focsani'],
+  'zalau': ['cluj-napoca', 'baia-mare', 'satu-mare', 'oradea'],
+};
+
+function generateCityLinks(city) {
+  if (!cityLinks[city.slug]) return '';
+  const slugToName = {};
+  for (const c of cities) slugToName[c.slug] = c.name;
+  const chips = cityLinks[city.slug]
+    .map(slug => `<a href="/tratament-ceramic-auto-${slug}" class="city-chip">${slugToName[slug] || slug}</a>`)
+    .join('\n    ');
+  return `
+<div class="section city-links-section">
+  <h2>Tratament ceramic auto și în orașele apropiate</h2>
+  <div class="city-chips">
+    ${chips}
+    <a href="/" class="city-chip city-chip-home">← Înapoi la pagina principală</a>
+  </div>
+</div>`;
+}
+
 function generateStars(n) {
   return '★'.repeat(n) + '☆'.repeat(5 - n);
 }
@@ -798,6 +859,12 @@ function generatePage(city) {
     .breadcrumb{color:#555;font-size:.85rem;padding:12px 20px;max-width:860px;margin:0 auto}
     .breadcrumb a{color:#888}
     .breadcrumb a:hover{color:#C9A020}
+    .city-links-section{text-align:center}
+    .city-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:16px}
+    .city-chip{display:inline-block;border:1px solid #C9A02066;color:#C9A020;padding:8px 18px;border-radius:50px;font-size:.85rem;font-weight:600;transition:.2s;background:#111;text-decoration:none}
+    .city-chip:hover{background:#C9A020;color:#000;border-color:#C9A020}
+    .city-chip-home{border-color:#444;color:#666;font-size:.8rem}
+    .city-chip-home:hover{background:#333;color:#fff;border-color:#555}
     @media(max-width:600px){.images-row img{width:100%}.hero h1{font-size:1.4rem}}
   </style>
 </head>
@@ -919,6 +986,8 @@ function generatePage(city) {
     <a href="/" class="btn-main">Comandă Acum — 99 RON</a>
   </div>
 </div>
+
+${generateCityLinks(city)}
 
 <!-- CTA FINAL -->
 <div class="cta-section">
