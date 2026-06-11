@@ -784,21 +784,12 @@ function generatePage(city) {
   <meta property="og:description" content="Restaurare și protecție plastice auto în ${city.name}. Livrare Sameday 24h.">
   <meta property="og:image" content="https://www.wownanoceramic.ro/produs.jpeg">
   <meta property="og:url" content="https://www.wownanoceramic.ro/tratament-ceramic-auto-${city.slug}">
-  <meta property="og:type" content="product">
+  <meta property="og:type" content="website">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
     "@graph":[
-      {
-        "@type":"Product",
-        "name":"WOW NanoCeramic Restore & Protect",
-        "description":"Tratament nano-ceramic pentru restaurarea și protecția plasticelor exterioare auto. Disponibil în ${city.name} cu livrare Sameday 24h.",
-        "image":"https://www.wownanoceramic.ro/produs.jpeg",
-        "brand":{"@type":"Brand","name":"WOW NanoCeramic"},
-        "offers":{"@type":"Offer","price":"99","priceCurrency":"RON","availability":"https://schema.org/InStock","url":"https://www.wownanoceramic.ro/"},
-        "aggregateRating":{"@type":"AggregateRating","ratingValue":"4.9","reviewCount":"127"}
-      },
       {
         "@type":"FAQPage",
         "mainEntity":[${faqSchema}]
