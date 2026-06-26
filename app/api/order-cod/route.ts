@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
       lockerName,
     } = body;
 
-    if (!name || !phone || !email || !quantity || !cashOnDelivery) {
+    if (!name || !phone || !quantity || !cashOnDelivery) {
       return NextResponse.json({ error: 'Câmpuri lipsă.' }, { status: 400 });
     }
 
@@ -80,7 +80,8 @@ export async function POST(req: NextRequest) {
       `,
     });
 
-    // ── 3. Email Client — confirmare plasare comandă ───────────────────────────
+    // ── 3. Email Client — confirmare plasare comandă (doar dacă a fost completat email) ──
+    if (email) {
     await resend.emails.send({
       from: 'comenzi@wownanoceramic.ro',
       to: email,
@@ -107,6 +108,7 @@ export async function POST(req: NextRequest) {
         </div>
       `,
     });
+    }
 
     return NextResponse.json({ success: true, orderId });
   } catch (error: any) {

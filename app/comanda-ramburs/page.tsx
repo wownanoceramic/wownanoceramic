@@ -139,7 +139,7 @@ function JudetSelect({ value, onChange }: { value: string; onChange: (v: string)
     <select value={value} onChange={e => onChange(e.target.value)} style={{
       width: '100%', padding: '12px 14px', background: '#1a1a1a',
       border: '1px solid #333', borderRadius: '8px', color: value ? '#fff' : '#888',
-      fontSize: '14px', cursor: 'pointer', appearance: 'none',
+      fontSize: '16px', cursor: 'pointer', appearance: 'none',
       backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 12 12\'%3E%3Cpath fill=\'%23888\' d=\'M6 8L1 3h10z\'/%3E%3C/svg%3E")',
       backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center',
     }}>
@@ -159,7 +159,7 @@ function Input({ placeholder, value, onChange, type = 'text' }: {
       style={{
         width: '100%', padding: '12px 14px', background: '#1a1a1a',
         border: '1px solid #333', borderRadius: '8px', color: '#fff',
-        fontSize: '14px', outline: 'none', boxSizing: 'border-box',
+        fontSize: '16px', outline: 'none', boxSizing: 'border-box',
         fontFamily: 'Montserrat, sans-serif',
       }}
     />
@@ -198,7 +198,7 @@ function ComandaForm() {
 
   async function handleSubmit() {
     setError('');
-    if (!name || !phone || !email) { setError('Completează numele, telefonul și email-ul.'); return; }
+    if (!name || !phone) { setError('Completează numele și telefonul.'); return; }
     if (deliveryType === 'curier' && (!street || !city || !county)) { setError('Completează adresa completă pentru livrare curier.'); return; }
     if (deliveryType === 'easybox' && !locker)  { setError('Selectează un punct EasyBox de pe hartă.'); return; }
     if (deliveryType === 'easybox' && !county)  { setError('Selectează județul pentru livrare EasyBox.'); return; }
@@ -263,7 +263,7 @@ function ComandaForm() {
       {/* Date personale */}
       <Input placeholder="Nume complet *" value={name}  onChange={setName} />
       <Input placeholder="Telefon *"      value={phone} onChange={setPhone} type="tel" />
-      <Input placeholder="Email *"        value={email} onChange={setEmail} type="email" />
+      <Input placeholder="Email (opțional)" value={email} onChange={setEmail} type="email" />
 
       {/* ── CURIER ── */}
       {deliveryType === 'curier' && (
