@@ -42,3 +42,9 @@ next-env.d.ts
 
 .vercel
 .env*.local
+
+# Google service account keys
+gsc-sa.json
+*-sa.json
+*service-account*.json
+gcp-*.json
