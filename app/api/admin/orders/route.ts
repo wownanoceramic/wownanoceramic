@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdmin } from '@/lib/adminAuth';
 import { getAllOrders } from '@/lib/redis';
 
 export async function GET(req: NextRequest) {
-  const pwd = req.nextUrl.searchParams.get('pwd');
-  if (pwd !== process.env.ADMIN_PASSWORD) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const denied = await requireAdmin(req);
+  if (denied) return denied;
 
   const orders = await getAllOrders();
   return NextResponse.json({ orders });

@@ -52,3 +52,13 @@ export async function getAllOrders(): Promise<Order[]> {
   const orders = await Promise.all(ids.map(id => getOrder(id as string)));
   return orders.filter(Boolean) as Order[];
 }
+
+// Returnează true doar prima dată când vedem sesiunea Stripe (protecție la retry-urile webhook-ului).
+export async function claimStripeSession(sessionId: string): Promise<boolean> {
+  const res = await redis.set(`stripe:session:${sessionId}`, '1', { nx: true, ex: 60 * 60 * 24 * 30 });
+  return res === 'OK';
+}
+
+export async function releaseStripeSession(sessionId: string) {
+  await redis.del(`stripe:session:${sessionId}`);
+}

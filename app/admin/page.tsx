@@ -33,20 +33,20 @@ export default function AdminPage() {
   const [messages, setMessages] = useState<Record<string, { text: string; ok: boolean }>>({});
 
   const handleLogin = async () => {
-    const res = await fetch(`/api/admin/orders?pwd=${encodeURIComponent(password)}`);
+    const res = await fetch(`/api/admin/orders`, { headers: { 'x-admin-password': password } });
     if (res.ok) {
       setAuthed(true);
       setAuthError('');
       const data = await res.json();
       setOrders(data.orders || []);
     } else {
-      setAuthError('Parolă greșită.');
+      setAuthError(res.status === 429 ? 'Prea multe încercări. Reîncearcă în 15 minute.' : 'Parolă greșită.');
     }
   };
 
   const refreshOrders = async () => {
     setLoading(true);
-    const res = await fetch(`/api/admin/orders?pwd=${encodeURIComponent(password)}`);
+    const res = await fetch(`/api/admin/orders`, { headers: { 'x-admin-password': password } });
     if (res.ok) {
       const data = await res.json();
       setOrders(data.orders || []);
@@ -56,9 +56,9 @@ export default function AdminPage() {
 
   const generateAWB = async (orderId: string) => {
     setActionLoading(prev => ({ ...prev, [`awb_${orderId}`]: 'loading' }));
-    const res = await fetch(`/api/admin/generate-awb?pwd=${encodeURIComponent(password)}`, {
+    const res = await fetch(`/api/admin/generate-awb`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-admin-password': password },
       body: JSON.stringify({ orderId }),
     });
     const data = await res.json();
@@ -73,9 +73,9 @@ export default function AdminPage() {
 
   const resendTracking = async (orderId: string) => {
     setActionLoading(prev => ({ ...prev, [`track_${orderId}`]: 'loading' }));
-    const res = await fetch(`/api/admin/resend-tracking?pwd=${encodeURIComponent(password)}`, {
+    const res = await fetch(`/api/admin/resend-tracking`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-admin-password': password },
       body: JSON.stringify({ orderId }),
     });
     const data = await res.json();
@@ -89,9 +89,9 @@ export default function AdminPage() {
 
   const generateInvoice = async (orderId: string) => {
     setActionLoading(prev => ({ ...prev, [`inv_${orderId}`]: 'loading' }));
-    const res = await fetch(`/api/admin/generate-invoice?pwd=${encodeURIComponent(password)}`, {
+    const res = await fetch(`/api/admin/generate-invoice`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'x-admin-password': password },
       body: JSON.stringify({ orderId }),
     });
     const data = await res.json();

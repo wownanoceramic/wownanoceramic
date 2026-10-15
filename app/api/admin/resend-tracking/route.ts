@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdmin } from '@/lib/adminAuth';
+import { esc } from '@/lib/html';
 import { Resend } from 'resend';
 import { getOrder } from '@/lib/redis';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: NextRequest) {
-  const pwd = req.nextUrl.searchParams.get('pwd');
-  if (pwd !== process.env.ADMIN_PASSWORD) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const denied = await requireAdmin(req);
+  if (denied) return denied;
 
   try {
     const { orderId } = await req.json();
@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
     const order = await getOrder(orderId);
     if (!order) return NextResponse.json({ error: 'Comanda nu există' }, { status: 404 });
     if (!order.awb) return NextResponse.json({ error: 'AWB nu a fost generat încă' }, { status: 400 });
+    if (!order.email) return NextResponse.json({ error: 'Clientul nu are email — trimite AWB-ul prin SMS/telefon.' }, { status: 400 });
 
     const adresaLivrareText = order.deliveryType === 'easybox'
       ? `EasyBox: ${order.lockerName || `Locker #${order.lockerId}`}`
@@ -29,7 +30,7 @@ export async function POST(req: NextRequest) {
       html: `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
           <h2 style="color:#C9A020">📦 Coletul tău a fost expediat!</h2>
-          <p>Bună ${order.name},</p>
+          <p>Bună ${esc(order.name)},</p>
           <p>Îți retrimitem detaliile de livrare pentru comanda ta.</p>
           <table style="width:100%;border-collapse:collapse;margin:20px 0">
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Produs</td>
@@ -39,7 +40,7 @@ export async function POST(req: NextRequest) {
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Livrare</td>
                 <td style="padding:8px;border:1px solid #eee">${order.deliveryType === 'easybox' ? '📦 EasyBox' : '🚚 Curier la ușă'}</td></tr>
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Adresă livrare</td>
-                <td style="padding:8px;border:1px solid #eee">${adresaLivrareText}</td></tr>
+                <td style="padding:8px;border:1px solid #eee">${esc(adresaLivrareText)}</td></tr>
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">AWB Tracking</td>
                 <td style="padding:8px;border:1px solid #eee;font-weight:bold">
                   <a href="https://sameday.ro/awb-tracking?awb=${order.awb}" style="color:#C9A020">${order.awb}</a>

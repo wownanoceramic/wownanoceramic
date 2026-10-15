@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdmin } from '@/lib/adminAuth';
+import { esc } from '@/lib/html';
+import { transportCost as calcTransport } from '@/lib/pricing';
 import { Resend } from 'resend';
 import { getOrder, updateOrder } from '@/lib/redis';
 import { createInvoice } from '@/lib/oblio';
@@ -6,10 +9,8 @@ import { createInvoice } from '@/lib/oblio';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: NextRequest) {
-  const pwd = req.nextUrl.searchParams.get('pwd');
-  if (pwd !== process.env.ADMIN_PASSWORD) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  const denied = await requireAdmin(req);
+  if (denied) return denied;
 
   try {
     const { orderId } = await req.json();
@@ -20,10 +21,8 @@ export async function POST(req: NextRequest) {
     if (order.invoiceNumber) return NextResponse.json({ error: 'Factură deja emisă', invoice: order.invoiceNumber }, { status: 400 });
 
     // ── Calculez transport și preț produs ─────────────────────────────────────
-    let transportCost = 0;
-    if (order.quantity === 1) {
-      transportCost = order.deliveryType === 'easybox' ? 16.99 : 18.99;
-    }
+    // Transportul se facturează doar la ramburs, 1 bucată (cardul are transport gratuit).
+    const transportCost = calcTransport(order.quantity, order.type, order.deliveryType);
     const productTotal = Number((order.total - transportCost).toFixed(2));
     const unitPrice = Number((productTotal / order.quantity).toFixed(2));
 
@@ -50,14 +49,14 @@ export async function POST(req: NextRequest) {
     });
 
     // ── Email Client cu factura ───────────────────────────────────────────────
-    await resend.emails.send({
+    if (order.email) await resend.emails.send({
       from: 'comenzi@wownanoceramic.ro',
       to: order.email,
       subject: `🧾 Factura ta WOW NanoCeramic - ${invoice.seriesName} ${invoice.number}`,
       html: `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
           <h2 style="color:#C9A020">🧾 Factura ta fiscală</h2>
-          <p>Bună ${order.name},</p>
+          <p>Bună ${esc(order.name)},</p>
           <p>Îți trimitem factura fiscală pentru comanda ta.</p>
           <table style="width:100%;border-collapse:collapse;margin:20px 0">
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">Produs</td>

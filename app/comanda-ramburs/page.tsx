@@ -2,6 +2,7 @@
 
 import { Suspense, useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { parseQuantity, productPrice, transportCost as calcTransport } from '@/lib/pricing';
 
 const JUDETE = [
   'Alba','Arad','Argeș','Bacău','Bihor','Bistrița-Năsăud','Botoșani','Brăila',
@@ -12,8 +13,6 @@ const JUDETE = [
   'Vâlcea','Vaslui','Vrancea',
 ];
 
-const TRANSPORT_CURIER  = 18.99;
-const TRANSPORT_EASYBOX = 16.99;
 
 // Injectează județul în câmpul de căutare al widget-ului Sameday după ce se deschide
 function injectCountySearch(county: string) {
@@ -169,8 +168,9 @@ function Input({ placeholder, value, onChange, type = 'text' }: {
 // ─── Formular principal ───────────────────────────────────────────────────────
 function ComandaForm() {
   const params = useSearchParams();
-  const qty   = Number(params.get('qty')   || 1);
-  const price = Number(params.get('price') || 0);
+  // Prețul vine din tabelul fix de bundle-uri, nu din URL.
+  const qty   = parseQuantity(params.get('qty')) ?? 1;
+  const price = productPrice(qty);
 
   const [deliveryType, setDeliveryType] = useState<'curier' | 'easybox'>('curier');
   const [locker, setLocker] = useState<{ id: number; name: string; address: string; city: string } | null>(null);
@@ -191,9 +191,7 @@ function ComandaForm() {
     if (l.city) setCity(l.city);
   }
 
-  const transportCost = qty === 1
-    ? (deliveryType === 'easybox' ? TRANSPORT_EASYBOX : TRANSPORT_CURIER)
-    : 0;
+  const transportCost = calcTransport(qty, 'ramburs', deliveryType);
   const totalFinal = price + transportCost;
 
   async function handleSubmit() {
@@ -205,7 +203,7 @@ function ComandaForm() {
 
     setLoading(true);
     try {
-      const body: any = { name, phone, email, quantity: qty, cashOnDelivery: totalFinal, deliveryType };
+      const body: any = { name, phone, email, quantity: qty, deliveryType };
 
       if (deliveryType === 'curier') {
         body.street = street; body.city = city; body.county = county;

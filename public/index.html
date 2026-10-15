@@ -536,7 +536,7 @@ footer{background:#040404;padding:72px 60px 36px}
             <span class="bundle-badge badge-free" style="position:relative;right:auto;transform:none">Transport gratuit</span>
           </div>
         </div>
-        <div class="bundle-card" onclick="selectBundle(this,3,276)" data-qty="3" data-price="267">
+        <div class="bundle-card" onclick="selectBundle(this,3,276)" data-qty="3" data-price="276">
           <div class="bundle-radio"></div>
           <div class="bundle-info">
             <div class="bundle-name">🔥 3 bucăți — 92 RON/buc</div>
@@ -544,7 +544,7 @@ footer{background:#040404;padding:72px 60px 36px}
           </div>
           <span class="bundle-badge badge-free">Transport gratuit</span>
         </div>
-        <div class="bundle-card" onclick="selectBundle(this,4,360)" data-qty="4" data-price="336">
+        <div class="bundle-card" onclick="selectBundle(this,4,360)" data-qty="4" data-price="360">
           <div class="bundle-radio"></div>
           <div class="bundle-info">
             <div class="bundle-name">🚀 4 bucăți — 90 RON/buc</div>
@@ -1175,7 +1175,7 @@ async function checkout() {
     var res = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ quantity: cart[0].qty, paymentMethod: method, totalPrice: cart[0].price })
+      body: JSON.stringify({ quantity: cart[0].qty })
     });
     var data = await res.json();
     if (data.url) {
