@@ -35,7 +35,9 @@ export async function POST(req: NextRequest) {
   }
 
   // ── Idempotență: Stripe retrimite evenimentul la erori/timeout ─────────────
-  if (!(await claimStripeSession(session.id))) {
+  // Dacă Redis nu răspunde, continuăm (mai bine un email dublu decât o comandă pierdută).
+  const claimed = await claimStripeSession(session.id).catch(() => true);
+  if (!claimed) {
     return NextResponse.json({ received: true, duplicate: true });
   }
 
@@ -56,6 +58,7 @@ export async function POST(req: NextRequest) {
 
   // ── 1. Salvare comandă în Redis ───────────────────────────────────────────
   const orderId = nanoid(10);
+  let saved = true;
   try {
     await saveOrder({
       id: orderId,
@@ -69,21 +72,21 @@ export async function POST(req: NextRequest) {
       status: 'new',
     });
   } catch (err: any) {
-    // Eliberăm sesiunea ca retry-ul Stripe să poată salva comanda.
+    saved = false;
     console.error('Redis save error:', err.message);
-    await releaseStripeSession(session.id).catch(() => {});
-    return NextResponse.json({ error: 'save failed' }, { status: 500 });
   }
 
   // ── 2. Email Admin ────────────────────────────────────────────────────────
+  let adminMailOk = false;
   try {
-    await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: 'comenzi@wownanoceramic.ro',
       to: 'contact@wownanoceramic.ro',
-      subject: `💳 Comandă nouă CARD - ${name} - ${total} RON`,
+      subject: `${saved ? '' : '⚠️ NESALVATĂ ÎN ADMIN - '}💳 Comandă nouă CARD - ${name} - ${total} RON`,
       html: `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
           <h2 style="color:#C9A020">💳 Comandă Nouă Card</h2>
+          ${saved ? '' : '<p style="background:#fff3cd;padding:10px;border:1px solid #e0b000"><strong>⚠️ Comanda NU a putut fi salvată în panoul admin (baza de date indisponibilă). AWB-ul și factura trebuie făcute manual din datele de mai jos.</strong></p>'}
           <table style="width:100%;border-collapse:collapse">
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">ID Comandă</td>
                 <td style="padding:8px;border:1px solid #eee;font-family:monospace">${orderId}</td></tr>
@@ -110,8 +113,16 @@ export async function POST(req: NextRequest) {
         </div>
       `,
     });
+    if (error) console.error('Resend email error:', error);
+    else adminMailOk = true;
   } catch (err: any) {
     console.error('Resend email error:', err.message);
+  }
+
+  // Nici salvată, nici trimisă pe email → 500 ca Stripe să reîncerce mai târziu.
+  if (!saved && !adminMailOk) {
+    await releaseStripeSession(session.id).catch(() => {});
+    return NextResponse.json({ error: 'order not recorded' }, { status: 500 });
   }
 
   // ── 3. Email Client — confirmare comandă ──────────────────────────────────

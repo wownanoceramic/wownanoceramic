@@ -46,7 +46,9 @@ export async function POST(req: NextRequest) {
       : `${street}, ${city}, ${county}`;
 
     // ── 1. Salvare comandă în Redis ───────────────────────────────────────────
+    // Dacă Redis cade, comanda NU se pierde: emailul către admin pleacă oricum cu toate datele.
     const orderId = nanoid(10);
+    let saved = true;
     await saveOrder({
       id: orderId,
       type: 'ramburs',
@@ -63,16 +65,20 @@ export async function POST(req: NextRequest) {
       lockerId: lockerId ? parseInt(lockerId) : undefined,
       lockerName: lockerName || '',
       status: 'new',
+    }).catch((err: any) => {
+      saved = false;
+      console.error('Redis save error (order-cod):', err?.message);
     });
 
     // ── 2. Email Admin ────────────────────────────────────────────────────────
-    await resend.emails.send({
+    const { error: adminMailError } = await resend.emails.send({
       from: 'comenzi@wownanoceramic.ro',
       to: 'contact@wownanoceramic.ro',
-      subject: `🛒 Comandă nouă RAMBURS - ${name} - ${cashOnDelivery} RON`,
+      subject: `${saved ? '' : '⚠️ NESALVATĂ ÎN ADMIN - '}🛒 Comandă nouă RAMBURS - ${name} - ${cashOnDelivery} RON`,
       html: `
         <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
           <h2 style="color:#C9A020">🛒 Comandă Nouă Ramburs</h2>
+          ${saved ? '' : '<p style="background:#fff3cd;padding:10px;border:1px solid #e0b000"><strong>⚠️ Comanda NU a putut fi salvată în panoul admin (baza de date indisponibilă). AWB-ul și factura trebuie făcute manual din datele de mai jos.</strong></p>'}
           <table style="width:100%;border-collapse:collapse">
             <tr><td style="padding:8px;border:1px solid #eee;font-weight:bold">ID Comandă</td>
                 <td style="padding:8px;border:1px solid #eee;font-family:monospace">${orderId}</td></tr>
@@ -99,6 +105,12 @@ export async function POST(req: NextRequest) {
         </div>
       `,
     });
+
+    if (adminMailError) {
+      console.error('Resend admin email error (order-cod):', adminMailError);
+      // Fără salvare și fără email comanda s-ar pierde — cerem clientului să sune.
+      if (!saved) throw new Error('Comanda nu a putut fi înregistrată.');
+    }
 
     // ── 3. Email Client — confirmare plasare comandă (doar dacă a fost completat email) ──
     if (email) {
